@@ -1,0 +1,864 @@
+
+--- PAGE 1 ---
+Basma Ben Difallah
+Laboratory of Electromechanical Systems,
+National Engineering School of Sfax,
+University of Sfax,
+Sfax, Tunisia
+e-mails: basmaben@yahoo.fr;
+basma.dhifallah@gmail.com
+Pierre-Henri Cornuault
+Laboratory FEMTO-ST,
+National Higher School of Mechanics and
+Microtechniques,
+University of Franche Comté,
+Besançon 25000, France
+e-mail: pierre-henri.cornuault@ens2m.fr
+Mohamed Kharrat1
+Laboratory of Electromechanical Systems,
+National Engineering School of Sfax,
+University of Sfax,
+Sfax 3038, Tunisia
+e-mail: mohamed.kharrat@ipeis.rnu.tn
+Maher Dammak
+Laboratory of Electromechanical Systems,
+National Engineering School of Sfax,
+University of Sfax,
+Sfax 3018, Tunisia
+e-mail: maher.dammak@ipeis.rnu.tn
+Guy Monteil
+Laboratory FEMTO-ST,
+National Higher School of Mechanics and
+Microtechniques,
+University of Franche Comté,
+Besançon 25000, France
+e-mail: guy.monteil@univ-fcomte.fr
+On the Role of Solid Lubricant
+Fillers in the Tribological,
+Micromechanical, and
+Morphological Properties of PA66
+Composites
+To achieve thermoplastics-based composites with high tribological performances, molybde-
+num disulﬁde (MoS2) and graphite (Gr) were incorporated separately to a polyamide 66
+(PA66) matrix. Two different development methodologies of composites were used. The
+morphological features and the micro-mechanical properties of composites were investi-
+gated to stress the inﬂuence of the ﬁller surface treatment and its dispersion. The friction
+coefﬁcient was evaluated using a ball on a ﬂat micro-tribometer. The wear mechanisms
+were also characterized. The best tribological performance was exhibited by 10 wt% of
+graphite. The surface treatment of the ﬁller inclusions by 3-aminopropyltriethoxysilane
+(AMPTES) showed an improvement in the morphological aspects of adhesion at the
+ﬁller/matrix interface. [DOI: 10.1115/1.4045804]
+Keywords: thermoplastics-based composites, MoS2, graphite, tribological performance,
+micro-mechanical properties, adhesion, dry friction, wear, wear mechanisms
+1
+Introduction
+The study of the wear behavior of polymer-based systems has
+attracted the attention of many researchers [1,2] owing to their
+wider availability of material choice, ease of manufacturing, light-
+weight, and good strength. The highest efﬁciency of such material’s
+adoption is found in situations where sliding wear is involved [3–5].
+For not long ago, the polymer-based materials were favored over
+their metal-based counterparts because of their low friction coefﬁ-
+cient and capacity to sustain loads. This reason has given an
+impetus to the industrial manufacture of the materials as in the pro-
+duction of bearing components adopted in automotive industries
+such as cams, vacuum pumps, wheels, etc.
+In this article, PA66 is selected as a target material. Polyamide 66
+(PA66) composites are ideal materials for dynamic bearing applica-
+tions, even at high temperatures. They are widely used in automotive
+applications such as automatic gears, sealing for turbocompressors
+pumps, pedal and gear shift components, and valve covers. The
+excellent mechanical properties, combined with the good wear resis-
+tance, extend their range of uses to the aerospace industry as it offers
+weight savings in compressor blades for turbojet engines [6].
+In severe service conditions (i.e., very low or high temperature,
+radiation, vacuum, extreme contact pressure), solid lubricants are
+the best choice to control the friction and wear of thermoplastics.
+When present at a sliding contact, solid lubricants act in the same
+way as their liquid counterparts. Particularly, they shear easily to
+prevent wear damage in the sliding interface and to reduce the fric-
+tion coefﬁcient [7–9]. Several inorganic materials (e.g., graphite,
+molybdenum disulﬁde “MoS2,” boric acid, hexagonal boron
+nitride) can provide excellent anti-friction and wear ability. Their
+lamellar or layered structure confers lubricity to most of these
+solids. Recent advances indicated that the black phosphorus (BP)
+was selected as a new two-dimensional material with intriguing
+mechanical and lubrication properties. The incorporation of BP
+nanosheets into organic (polyetheretherketone (PEEK)/polytetra-
+ﬂuoroethylene (PTFE)) composites and inorganic (carbon ﬁber/
+PTFE) composites could reduce friction and wear of both systems
+[10]. For BP/polyvinylidene diﬂuoride (PVDF) composites, it was
+reported that BP content larger than 10 wt% enhanced the friction
+properties and the wear resistance of the composites [11]. Puértolas
+et al. [12] studied the lubricant ability of graphene nanoplatelets
+(GNPs) in improving the PEEK wear properties. The GNPs were
+used without any chemical functionalization in thermoplastic-based
+materials, the results showed an enhancement in the surface hard-
+ness and in the tribological properties. Zhang et al. [13] reported
+that aramid particles played a synergetic effect with sulfur dioxide
+(SiO2) and PTFE nanoparticles in improving the tribological perfor-
+mance of polyoxymethylene (POM) composites.
+Graphite and MoS2 are natural minerals with lamellar structure
+extracted from deposits around the world. The lubricity of graphite
+lasts up to 400 °C, while MoS2 decomposes at about 200 °C.
+Recently, partially graphitized carbon composites are developed
+1Corresponding author.
+Contributed by the Tribology Division of ASME for publication in the JOURNAL OF
+TRIBOLOGY. Manuscript received June 27, 2019; ﬁnal manuscript received December
+10, 2019; published online December 20, 2019. Assoc. Editor: Yonggang Meng.
+Journal of Tribology
+MAY 2020, Vol. 142 / 051901-1
+Copyright © 2020 by ASME
+
+--- PAGE 2 ---
+to achieve better lubricity at elevated temperatures. On the other
+hand, MoS2 has the best overall load-carrying capacity as ﬁlms
+deposited on rigid substrates and it is considered among the most
+suited for aerospace and cryogenic applications [14].
+Nevertheless, the deployment of particle-reinforced polymer
+matrix composites as components for use in real service needs a
+good understanding of the processing associated with the structure
+and its consequence on physical and mechanical properties. In this
+ﬁeld, most recent research studies have provided a theoretical guide
+and experimental tools to speciﬁcally tailor the matrix/ﬁller mor-
+phology and surface chemistry in order to improve their adhesion
+and decline the propensity for agglomeration [15,16]. Wu et al.
+[17] have chemically treated the graphite powders to make them
+well compatibility with the polyamide 6 matrix and they studied
+the mechanical and electrical properties of the resultant composites.
+The bending and tensile strengths were improved by the incorpora-
+tion of a modiﬁed graphite powder. Although the tribological prop-
+erties of thermoplastic composites ﬁlled with different reinforcing
+ﬁllers have been extensively studied, the effect of the development
+methodology and the ﬁller’s surface treatment on micro-mechanical
+and morphological properties was not systematically compared yet.
+The purpose of this study is to investigate the effect of adding
+untreated and treated MoS2 and graphite with 3-aminopropyl-
+triethoxysilane (AMPTES) to a PA66 matrix. In this context, two
+development methodologies are proposed. The tribological beha-
+vior of PA-based composites is reported. Micro-mechanical charac-
+terizations and morphological aspects of the elaborated composites
+are also studied in order to stress the effect of the processing meth-
+odology on composites properties.
+2
+Experimental Details
+2.1
+Materials. The composites investigated in the present
+study consisted of two ﬂaky shaped solid lubricant powders incor-
+porated separately PA66 granules as the matrix material. The
+polymer was provided by Mapex (1.14 g/cm3 density, 250 °C
+melting point) and dried for 3 h at 85 °C.
+The used ﬁller materials were MoS2 powder (6 μm average size,
+5.06 g/cm3 density) with 95% purity and graphite powder of
+average particle size in the range of 22 µm (1.9 g/cm3 density).
+The
+two
+materials
+were
+obtained
+from
+Aldrich
+Chemistry
+(Sigma-Aldrich; Figs. 1(a) and 1(b)).
+Different compositions were considered in this work in the range
+of 2, 4, 7, and 10 wt% graphite or MoS2.
+2.2
+Composites Preparation. The composites preparation
+was achieved with two methodologies. Concerning the ﬁrst conven-
+tional methodology (M1), specimens were produced by direct inject-
+ing molding using Demag Ergotech 125/475 industrial injection-
+molding machine. The Shore A hardness of neat PA specimens
+was94.66 ± 0.57 and Ra(the average roughness) wasabout 0.42 µm.
+As for the second methodology (M2), solid lubricant powders
+were chemically treated. The surface treatment of MoS2 particles
+was carried out in a suspension containing 5 g MoS2, 10 ml
+ethanol, and 0.05 ml 3-aminopropyltriethoxy silane (AMPTES)
+(Sigma-Aldrich, 0.949 g/ml density). The suspension was stirred
+mechanically (RZR1, Heidolph) for 45 min, then dried by
+vacuum evaporation for 3 h. With respect to the surface treatment
+of graphite, it was achieved by stirring 5 g graphite with 25 ml
+ethanol and 0.015 ml AMPTES. The stirred solution was vacuum-
+dried for 6 h. The blending of the polymer with varying weight con-
+tents of treated solid lubricants was achieved by mechanical mixing
+using an internal mixer with two blade impellers. Thereafter, spec-
+imens were produced using an Arburg Allrounder 220 S injection-
+molding machine, the surface roughness of neat PA_M2 was about
+Ra = 0.36 and the Shore A hardness was 92.00 ± 1.63. The reason
+for using the two methodologies is to compare the industrial man-
+ufacturing process of composites by using direct injection
+molding via Demag Ergotech industrial injection machine with
+the second development methodology at the laboratory scale
+including surface treatment of the ﬁller and mechanical mixing
+with the polymer. The Arburg Allrounder injection-molding
+machine provides processing with small shot weights.
+2.3
+Friction and Wear Testing. A reciprocating ball on a ﬂat
+micro-tribometer was used for friction and wear tests. The descrip-
+tion of the homemade device was published in a previous research
+work [7]. A mechanical arrangement generated the required contact
+load. The magnitude of the dead load can be adjusted to very low
+values. The tangential load was monitored by a measuring head
+which was equilibrated by a counterbalancing arm. The system
+was based upon a translation table including precise linear ball
+bearing and enabling the micro-displacement of the ﬂat specimens.
+In order to avoid any mechanical vibrations of the system, all the
+mechanical elements were ﬁxed on an inertial marble structure
+with damping devices. A computer based software ensured the
+treatment of the measurements and the display of the results.
+A high-chromium steel ball with a diameter of 19.0 mm and an
+initial surface roughness of Ra = 0.12 µm served as a counterpart.
+The ball slides reciprocally against the ﬂat composites at a fre-
+quency of 1 Hz over a displacement magnitude of 2 mm. The tribo-
+logical investigations were performed with a constant normal load
+of FN = 5 N up to 10,000 sliding cycles (peak Hertzian contact pres-
+sure in the ball on ﬂat contact of about 35 MPa). For a better com-
+parison between the different composites, at least three friction tests
+were conducted for each set of conditions.
+The wear scar shape was measured with an Inﬁnite-Focus Alicona
+system at the end of each test. Before wear volume measurement, the
+samples were ultrasonically cleaned to eliminate the wear debris.
+In order to analyze wear mechanisms, scanning electron micro-
+scope (SEM) observations (JEOL JSM 6400F) were also conducted
+on the wear track coated with gold.
+2.4
+Micro-Mechanical
+Characterization:
+Scratch
+Test.
+Polymer scratch performance has drawn signiﬁcant interest in
+recent years. Particularly, the scratch behavior of thermoplastic
+composites was investigated in previous works [18–23]. In this
+context, it was reported that the structure-property relationship
+between morphology and scratch behavior in the case of polypro-
+pylene showed ironing and surface plowing mechanisms in the
+deformation mode [23–25]. It is hypothesized that the progression
+of scratch damage mechanisms is related to the ﬁsh scale and
+plowing transitions. The ﬁrst transition is marked by the appearance
+of ﬂuctuations and a gradual increase in the tangential force mea-
+sured by the scratch machine. In the second transition, abrupt
+changes and large waves were seen in the load proﬁle [21,26].
+The micro-mechanical analyses of composites were carried out
+by means of the Revetest Automatic Scratch Tester (Institut Jean
+Lamour-Département N2EV) which performs scratches under
+either constant or linearly increasing load.
+Tests were drawn over samples using a sphero-conical diamond
+indenter of 120 deg cone angle and 138 µm radius spherical tip,
+under continually increasing load. The loading initial value was
+1 N, the rate was 14.5 N/min, and the scratching speed was
+2.5 mm/min. The indenter is moved over the sample surface with
+a linearly increasing load until a normal load of 30 N is reached
+(Fig. 2). Tangential friction force, friction coefﬁcient, penetration,
+and residual depth were continually monitored. The abrupt increase
+in the load is termed the “critical load” for the onset of scratch vis-
+ibility; this critical value was used to study the material plowing
+resistance [21,24,27,28].
+2.5
+Microstructural Characterizations
+2.5.1
+Fractography. Fractography analyses were established
+to interpret the features observed on fractured surfaces and thus to
+identify the fundamental failure modes. As new composites have
+been developed, this technique is considered as a reliable tool for
+051901-2 / Vol. 142, MAY 2020
+Transactions of the ASME
+
+--- PAGE 3 ---
+researchers to relate fractographic morphologies to the failure pro-
+cesses in a component [29]. In fact, composite fracture surface anal-
+ysis is directly affected by the mechanical strength in the matrix/
+ﬁller interface. In our study, valuable information was provided
+by this microstructural characterization. The fractographic observa-
+tions were provided with a SEM (JEOL JSM 6400 F) and fracture
+surfaces were gold-coated before use.
+2.5.2
+X-Ray Tomography. X-ray tomography makes use of the
+refraction of X-rays by the specimen in image formation. Image
+processing relies entirely on X-ray absorption by the analyzed spe-
+cimen as a mechanism of contrast formation. These types of phase-
+contrast imaging methods warrant the visualization of details in
+weakly absorbing materials such as polymers or objects that do
+not absorb X-rays at all. In the context of materials science, X-ray
+phase-contrast imaging has become an important technique for
+the 2D/3D construction of low-density materials. It allows material
+characterization in terms of voids and cracks detection. It also deter-
+mines particle size and spatial distribution of the ﬁller. Hence, the
+X-ray computed tomography is considered as a reliable tool to char-
+acterize the performance of our composites.
+The principal experimental parameters of the Phoenix-X-ray
+device used (vtome x-S) are an X-ray tube voltage of 80 kV, a
+scan time of approximately 1 h, a silicon-based detector is amor-
+phous with 1920 × 1536 pixels of size, and the resolution adopted
+is 3 µm.
+3
+Results and Discussion
+3.1
+Friction and Wear Behaviors of the Composites
+3.1.1
+Friction Testing Results. Figure 3 shows the friction
+coefﬁcient of typical PA66 composites ﬁlled with solid lubricant
+powders by the two development methodologies as a function of
+sliding cycles (total sliding cycles of 10,000). These composites
+contain different concentrations of solid lubricant powders. The
+frictional behavior is to some extent reﬂected in this friction data.
+The friction coefﬁcients of composites with 10 wt% Gr prepared
+with M1 and with M2 achieve a relatively stable steady-state after
+a short running-in phase [7]. However, the friction coefﬁcient
+values did not stabilize as a function of the sliding cycles and
+showed a continuously increasing trend for most of the tested spec-
+imens. For pure PA, an increase in friction coefﬁcient is seen with
+the second methodology. It can also be seen that the friction coef-
+ﬁcient decreases as a function of the graphite content with both
+methodologies.
+In Fig. 4, friction coefﬁcients measured after 10,000 sliding
+cycles for all PA composites are given. Meanwhile, the composites
+manufactured by direct injection molding give rise to the lowest
+friction coefﬁcient. Interestingly, the composite with 10 wt% of
+graphite exhibits the lowest coefﬁcient of friction which falls
+from 0.19 with pure PA to 0.06. At the same graphite content, the
+friction coefﬁcient is 0.16 for the composites manufactured by the
+second methodology. In the case of PA/MoS2 composites injected
+and molded directly, the frictional coefﬁcient decreased slightly
+as a function of the solid lubricant content up to 7 wt% after
+which it increased. This is in agreement with the results published
+by Wang et al., who ﬁlled metakaolinite-based geopolymer with
+PTFE particles [30]. An optimum ﬁller fraction contributes to the
+shearing force’s reduction between the surfaces in contact,
+leading to a better friction response. As compared with direct injec-
+tion molding, the frictional coefﬁcient of PA/MoS2 composites can
+further be reduced by the second methodology at 10 wt% of the
+ﬁller. In the present case, PA composite ﬁlled with graphite ﬂakes
+and injected molded directly demonstrated the best improvement
+in the friction performance.
+3.1.2
+Wear Test Results. Figure 5 shows the changes in the
+wear volume loss with respect to the composite’s preparation
+method, nature, and the proportion of the incorporated ﬁller into
+the PA matrix. An overall decreasing trend of the wear volume
+loss can be observed with the increase in wt% of the solid lubricant
+ﬁller. The decreasing tendencies obviously differ for each different
+condition. The best result is exhibited by the composition with
+10 wt% of graphite, with a wear volume loss of 11.79 × 10−3
+mm3, which is about six times lower than the value measured for
+the pure PA. It is well known that graphite can be easily dragged
+out from the matrix to form a third body transfer ﬁlm dispersed
+on the sliding counterparts [31,32]. The quantity of graphite on
+the sliding surface increases directly with its amount added to the
+composites. The plenteous graphite ﬂakes spread symmetrically
+on the sliding surface, which decreases the direct contact between
+the composites and the steel counterpart [33]. It is also worth point-
+ing out that wear volume loss of composites was higher with the
+second manufacturing methodology that may be attributed to the
+processing conditions (including mechanical mixing under electric
+Fig. 1
+SEM micrograph of (a) MoS2 powder and (b) graphite powder, as supplied
+Fig. 2
+Typical experimental plots for scratch adhesion tests on
+tests on PA/Gr composite
+Journal of Tribology
+MAY 2020, Vol. 142 / 051901-3
+
+--- PAGE 4 ---
+resistance heaters for the second methodology) and the use of two
+different processes setting speciﬁc to the injection units.
+3.1.3
+Analysis of Wear Mechanisms. Table 1 shows the optical
+3D surface measurements of the wear track’s central part for pure
+PA and selected PA composites elaborated by direct injection
+molding using a confocal scanning optical microscope (Sti@l
+sensor type). The 2D proﬁle in the middle of the wear track was
+also determined. A considerable difference in the topography is
+noticed between the pure PA and PA with 7 wt% MoS2 and
+10 wt% Gr composites. The PA surface proﬁle appears to be
+rough and jagged, while the wear picks in the case of PA/MoS2
+composite proﬁle are relatively stumped, a micro-plowing wear
+mechanism is activated. For the PA with 10 wt% Gr composites,
+it is worth mentioning that the wear proﬁle was difﬁcult to
+measure because it became fairly ﬂat and regular. Thus, wear was
+extremely reduced when adding 10 wt% of graphite.
+The SEM analyses shown in Figs. 6 and 7 were performed on the
+wear scars and the pin worn surfaces of (a) neat PA66, (b) PA with
+7 wt% MoS2, and (c) PA with 10 wt% Gr, respectively. It is to be
+noted that depending on the ﬁller nature and proportion, the worn
+surfaces experienced different wear mechanisms. The wear track
+of pure PA (Fig. 6(a)) was rough and characterized by severe scuff-
+ing. At higher magniﬁcations (insets), the evidence of plastic defor-
+mations and particle detachment were observed in the micrographs.
+In the course of the periodic sliding process, the repeated plowing
+(a)
+(b)
+(c)
+(d)
+Fig. 3
+Typical evolutions of friction coefﬁcient plotted against the number of sliding cycles for (a) and (b) PA/Gr composites
+prepared by M1 and M2, respectively, and (c) and (d) PA/MoS2 composites prepared by M1 and M2, respectively
+Fig. 4
+Variation of friction coefﬁcient after 10,000 sliding cycles
+for PA composites as a function of the specimen preparation and
+composition
+Fig. 5
+Comparison of wear volume loss of PA composites with
+the variation of the nature and the wt% of the solid lubricant ﬁller
+for the two development methodologies, 10,000 sliding cycles
+051901-4 / Vol. 142, MAY 2020
+Transactions of the ASME
+
+--- PAGE 5 ---
+mechanism caused the surface fatigue, thus debris was pulled out
+from the polymer. The counterpart steel pin (Fig. 7(a)) reveals the
+existence of abundant wear particles detached from the polymer
+and electrostatically deposited on the pin surface under mechanical
+interactions between the surfaces in contact. Several previous
+studies proved the PA aptitude in forming a uniform and adherent
+transfer ﬁlm on the steel counterpart [34–36]. However, Samyn
+et al. have demonstrated that the contact between the PA specimen
+and its steel counterpart depends on the time-load temperature
+related to overload conditions, and hence the interference with soft-
+ening and/or melting for PA [37]. For contact temperatures below
+the glass transition temperature, wear debris accumulated in the
+sliding stroke and did not compact in a transfer ﬁlm. In our case,
+the worn surface of PA indicates a severe adhesive mode in a soft-
+ening regime.
+In the case of PA with 7 wt% MoS2, the composite wear track is
+quite smooth when compared with pure PA. At higher magniﬁca-
+tions (Fig. 6(b)), it can be seen that the composites become
+plastically deformed under the repeated plowing mechanism.
+Indeed, the microcracks that were formed along the deformed mate-
+rial were pulled out by brittle fracture. The SEM image of the trans-
+fer ﬁlm formed on the counterpart pin (Fig. 7(b)) shows
+discontinuous and thick transfer. A large number of transferred
+PA debris is also observed on the high-chromium steel counterpart.
+The reasons for the above result may be as follows. Concerning the
+ﬁrst suggestion, it relates that the sliding test was interrupted before
+the transformation of the compacted debris in an adherent and
+coherent transfer ﬁlm [38]. As for the second suggestion, it pertains
+to the fact that during the sliding process, the transfer ﬁlm was
+damaged by the newly formed wear particles [39]. In all cases,
+the addition of MoS2 ﬂakes to PA66 promoted the development
+of a third body with a lamellar structure, which provided a better
+anti-wear property for the corresponding composite.
+Figure 6(c) shows the SEM micrograph of the worn surface of
+10 wt% graphite ﬁlled PA. It can be seen that the composite worn
+surface was smooth and only exhibited gentle micro-plowing
+Table 1
+Typical three-dimensional images and transversal proﬁles recorded on the worn surfaces of neat PA and PA composites
+injected molded directly
+Composite specimen
+3D micrograph
+2D wear proﬁle
+PA
+PA + 7%MoS2
+PA + 10%Gr
+Journal of Tribology
+MAY 2020, Vol. 142 / 051901-5
+
+--- PAGE 6 ---
+Fig. 6
+SEM of the worn surfaces after sliding tests for (a) unﬁlled PA, (b) 7 wt% MoS2 ﬁlled PA, and (c) 10 wt%
+graphite ﬁlled PA, arrows indicate sliding direction
+Fig. 7
+SEM of the pin worn surfaces after sliding tests for (a) unﬁlled PA, (b) 7 wt% MoS2 ﬁlled PA, and (c) 10 wt%
+graphite ﬁlled PA, arrows indicate sliding direction
+051901-6 / Vol. 142, MAY 2020
+Transactions of the ASME
+
+--- PAGE 7 ---
+phenomena. The magniﬁed detail shows no obvious particle detach-
+ment phenomena. As can be seen in Fig. 7(c) showing the steel coun-
+terpart, it appears that a transfer ﬁlm has been created (Fig. 7(c)) by
+the presence of a large amount of powder covering the counterface
+completely. These transferred particles are expected to be the com-
+pacted debrissticking together to form a uniform ﬁlm on the substrate
+surface. The surface reactivity seems to be higher with the addition of
+graphite particles that led to a signiﬁcant decrease in the wear volume
+loss and in the friction coefﬁcient as well.
+3.2
+Scratch Test Results. Figure 8 illustrates the typical
+results of the scratch test performed on pure PA and plots applied
+force (left side) and vertical displacement (right side) versus
+scratch distance. This ﬁgure reveals that the tangential force curve
+does not present a neck during the scratch test. Hence, there is no
+point in the curves that may identify a clear onset of failure,
+which can be explained by the absence of any ductile plow
+scratch damage with increasing load [40]. It can also be suggested
+that the polymer was progressively damaged during the scratch test
+[21].
+Figure 9 shows the typical critical load of four composites (PA/
+Gr_M1, PA/Gr_M2, PA/MoS2_M1, and PA/MoS2_M2) at 4 wt%
+and 10 wt%, respectively, whereby each histogram has an
+average of 10 different measurements. It was reported that the
+improved scratch resistance of thermoplastic polymers leads to
+higher critical loads [24]. As can be seen from the ﬁgure, the PA/
+Gr composites elaborated with the ﬁrst methodology exhibit the
+minimum values of the critical load, the average values are signiﬁ-
+cantly improved with the second methodology. At 10 wt% of
+graphite, the critical load rises from 7.4 N to 18.6 N. The load
+values decrease as the solid lubricant percentage increases. It was
+proved that undesirable failure mechanisms present during scratch-
+ing are evident points strongly related to the role of the ﬁller parti-
+cles in the scratch behavior [21,25]. It was also suggested that the
+critical load is related to fracture criteria and some yielding as a spe-
+ciﬁc failure mode [23]. Debonding of the solid lubricant particles
+and the formation of voids would probably lead to the decreasing
+tendencies in the scratch load as a function of the ﬁller content
+[21,23]. Wong et al. showed that talc-ﬁlled PP was found to be
+responsible for the great increased scratch visibility of PP due to
+the massive formation of voids as well as crack and debonding phe-
+nomena on the scratched surface [21]. The best results of the critical
+load are given with PA/MoS2 elaborated with the second manufac-
+turing methodology.
+Table 2 shows the residual depth Rh, the penetration depth Rp,
+and the viscoelastic recovery parameters under the highest applied
+load. It is interesting to notice here that the penetration depth
+reveals the real-time deformation behavior of the composite
+sample during the test, while the residual deformation data
+records the plastic deformation induced by the indenter. The differ-
+ence between the two depths may indicate the ratio of viscoelastic
+deformation under loading conditions; the larger the difference is,
+the larger the viscoelastic component is [26]. The surface damage
+is controlled by the plastic deformation experienced by the
+sample [26]. The percentage of viscoelastic recovery f can be calcu-
+lated as [20]
+f = [1 −(Rh/Rp)] × 100
+(1)
+The best scratch resistance parameters are recorded for neat PA,
+while scratches of non-treated graphite ﬁlled composites are
+extremely deeper. As expected, as the ﬁller fraction increases, the
+depth values increase. The viscoelastic recovery is improved for
+both cases of ﬁller with the surface modiﬁcation process, the resid-
+ual depth values are also reduced. In accordance with the critical
+load, PA/MoS2_M2 exhibits good scratch resistance parameters
+with high viscoelastic recovery and less residual depth of the mate-
+rial. The residual deformation of PA/Gr_M1 occurs at high depth
+values even though an improvement is seen with the second
+methodology.
+It is clear that the presence of solid lubricant particles hampers the
+viscoelastic recovery of the polymer chains. However, more resis-
+tance to the conical indenter (shallower penetration depth) and
+higher recovery are registered after surface properties modiﬁcation
+Fig. 9
+Comparative chart of critical load, Lc, after scratch testing
+for PA composites (M1 indicates the ﬁrst conventional methodol-
+ogy of preparation and M2 indicates the second preparation
+methodology)
+Fig. 8
+Typical scratch test plot for pure PA
+Table 2
+Scratch resistance parameters of PA composites: effect of the ﬁller fraction and the processing methodology
+1st methodology
+2nd methodology
+PA66
+wt% Gr
+wt% MoS2
+wt% Gr
+wt% MoS2
+4
+10
+4
+10
+4
+10
+4
+10
+Rp (µm)
+149.3
+238.7
+252.6
+155.1
+170.7
+167
+175.4
+146.1
+136.8
+Rh (µm)
+25
+74.5
+81.2
+39.7
+48.9
+49.8
+66.2
+31.4
+35.9
+f (%)
+83.2
+68.7
+67.8
+74.4
+71.3
+70.1
+62.2
+78.5
+73.7
+Journal of Tribology
+MAY 2020, Vol. 142 / 051901-7
+
+--- PAGE 8 ---
+of the ﬁller particles. It is reasoned that the improved interfacial
+adhesion of the solid lubricant particles will increase the scratch per-
+formance of the composites [21,23]. It is also proposed that the
+reduction of particle size and the increased stiffness and yield
+strength of thermoplastic polymers reduces the scratch visibility
+and then improves the scratch behavior of polymers [21].
+3.3
+Fractography Analysis. Matrix fracture is used in order to
+qualitatively assess the microscopical features of the composites
+after a brittle fracture. In Fig. 10, the SEM micrographs recorded
+on the fracture surface of the PA sample with 10 wt% of the ﬁller
+are presented. The particles in Figs. 10(a) and 10(b) are untreated
+with the coupling agent, the adhesion is clearly weak and many
+signs of debonding, cracks, and particle detachment are visible.
+Figures 10(c) and 10(d) show fractured surfaces of PA composites
+in the case of particles coated with AMPTES, indicating that the
+adhesion between the components is improved. The ﬁller is
+covered almost completely by the PA matrix. The silane employed
+as a coupling agent is able to form strong chemical bonding
+between the ﬁller and the PA matrix [41,42], it establishes molecu-
+lar bridge leading to a better interfacial adhesion and improved
+micro-mechanical properties of the composites.
+3.4
+X-Ray Tomography Results. Figure 11 show the typical
+X-ray images obtained for PA composites at 10 wt% MoS2 devel-
+oped with the ﬁrst and the second methodologies. The results
+given in Figs. 11(a) and 11(c) bring us enough information about
+porosity level and size and ﬁller distribution in the PA 6-6 based
+composites with untreated (M1) and treated MoS2 (M2), respec-
+tively. The comparison of the two development methodologies
+reveals how the ﬁrst methodology induces a large average pore
+number in a great abundance. Voids cover the particles of solid
+lubricant powder, which explains the poor adhesion between the
+ﬁller and the matrix. The three-dimensional views in Figs. 11(b)
+and 11(d) expose a highly dispersed morphology of MoS2 particles
+in the composite prepared using the second development methodol-
+ogy relative to the dispersion using the ﬁrst one.
+The X-ray tomography exhibits the full potential to recreate
+three-dimensional images of the bulk volume of our composites,
+revealing the distinct spatial distribution of the ﬁller. The effective
+dispersion of the ﬁllers in the thermoplastic matrix and the improve-
+ment of ﬁller-polymer interactions are two key challenges in the
+present work. The mechanical mixing in the second process thus
+shows improvement in the dispersion of ﬁller in the polymer
+Fig. 10
+SEM micrographs of fractured PA composites containing (a) 10 wt% of untreated MoS2
+(M1), (b) 10 wt% of untreated graphite (M1), (c) 10 wt% of treated MoS2 (M2), and (d) 10 wt% of
+treated graphite (M2)
+Fig. 11
+X-ray µ-tomography images of PA composite with
+10 wt% of MoS2
+051901-8 / Vol. 142, MAY 2020
+Transactions of the ASME
+
+--- PAGE 9 ---
+matrix. From the tribological point of view, a pre-treatment with
+AMPTES and the improved dispersion with the matrix are not abso-
+lutely necessary because the presence of untreated solid lubricant
+ﬁller in the sliding surface may deliver very good results.
+However, it could draw a conclusion that the second development
+methodology exerts a great good dispersion in the PA66 matrix
+and strong interfacial interaction between the modiﬁed surface of
+solid lubricant particles and PA66 matrix, resulting in greater
+enhancement of the micro-mechanical properties and the micro-
+structural aspects of the composites.
+4
+Conclusion
+The present work was undertaken with an objective to explore the
+potential of the solid lubricant inclusions in PA-based composites
+and to study the friction and wear properties of the developed com-
+posites. This research work has focused on providing basic knowl-
+edge to encourage further research in this area. The analysis of the
+processing methodology and its dependence on the tribological
+behavior, scratch response, and ﬁller dispersion leads to the follow-
+ing conclusions and recommendations:
+(1) Severe adhesive wear was observed on pure PA. The
+polymer exhibited a high friction coefﬁcient and wear
+volume loss.
+(2) For composites injected molded directly, the incorporation of
+the two solid lubricant powders, particularly graphite, was
+beneﬁcial in reducing the friction coefﬁcient and the wear
+volume loss of PA.
+(3) Composite ﬁlled with 10 wt% graphite corresponded to the
+best tribological parameters. The adhesive and plowing
+wear was extremely reduced.
+(4) The second development methodology, including surface
+modiﬁcation of the particles by AMPTES, mechanical
+mixing with the PA matrix, and microinjection, did not
+improve the friction and wear results.
+(5) The means performed to characterize the ﬁller/matrix adhe-
+sion for the composites developed conventionally (M1)
+showed poor interfacial adhesion with debonding and frac-
+ture phenomena. Tomographic visualization in 3D showed
+ﬁller agglomeration as well as the abundance of a large
+number of gas bubbles trapped in the composites.
+(6) The scratch test parameters were improved with the second
+development methodology particularly with the MoS2
+ﬁller. SEM micrographs of the fracture exhibited an
+improved interfacial adhesion between the ﬁller and the
+matrix. Debonding and voids were clearly reduced. X-ray
+tomography features showed homogeneous dispersion of
+the solid lubricant particles in the thermoplastic composites,
+a signiﬁcant decrease in the density of the gas bubbles was
+also noticed.
+Acknowledgment
+The authors gratefully acknowledge the ﬁnancial assistance of
+the Electro-Mechanical Systems Laboratory in the National Engi-
+neering School of Sfax funded by the Ministry of Higher Education
+and Scientiﬁc Research of Tunisia as well as the assistance provided
+by the Department of Applied Mechanics in the FEMTO-ST Insti-
+tute at Besançon, France.
+References
+[1] Erdemir, A., 2005, “Review of Engineered Tribological Interfaces for Improved
+Boundary Lubrication,” Tribol. Int., 38(3), pp. 249–256.
+[2] Souza, J. C. M., Bentes, A. C., Reis, K., Gavinha, S., Buciumeanu, M., Henriques,
+B., Silva, F. S., and Gomes, J. R., 2016, “Abrasive and Sliding Wear of Resin
+Composites for Dental Restorations,” Tribol. Int., 102(154), pp. 154–160.
+[3] Shalwan, A., and Yousif, B. F., 2013, “In State of Art: Mechanical and
+Tribological Behaviour of Polymeric Composites Based on Natural Fibres,”
+Mater. Design, 48, pp. 14–24.
+[4] Mazza, L., Trivella, A., Grassi, R., and Malucelli, G., 2015, “A Comparison of the
+Relative Friction and Wear Responses of PTFE and a PTFE-Based Composite
+When Tested Using Three Different Types of Sliding Wear Machines,” Tribol.
+Int., 90, pp. 15–21.
+[5] Jiang, Z., Gyurova, L. A., Schlarb, A. K., Friedrich, K., and Zhang, Z., 2008,
+“Study on Friction and Wear Behavior of Polyphenylene Sulﬁde Composites
+Reinforced by Short Carbon Fibers and Sub-Micro TiO2 Particles,” Compos.
+Sci. Technol., 68(3–4), pp. 734–742.
+[6] Shiva Kumar, K., and Chennakesava Reddy, A., 2016, “Study on Reinforcement
+Materials for Nylon Matrix Composites—A Review,” J. Sci. Eng. Res., 7(6),
+pp. 156–160.
+[7] Ben Difallah, B., Kharrat, M., Dammak, M., and Monteil, G., 2014, “Improvement
+in the Tribological Performance of Polycarbonate via the Incorporation of
+Molybdenum Disulﬁde Particles,” Tribol. T., 57(5), pp. 806–813.
+[8] Ben Difallah, B., Kharrat, M., Dammak, M., and Monteil, G., 2012,
+“Microstructure,
+Friction
+and
+Wear
+Analysis
+of
+Thermoplastic
+Based
+Composites With Solid Lubricant,” Mech. Ind., 13(5), pp. 337–346.
+[9] Ben Difallah, B., Kharrat, M., Dammak, M., and Monteil, G., 2012, “Mechanical
+and Tribological Response of ABS Polymer Matrix Filled With Graphite
+Powder,” Mater. Design, 34, pp. 782–787.
+[10] Lv, Y., Wang, W., Xie, G., and Lu, J., 2018, “Self-Lubricating PTFE-Based
+Composites With Black Phosphorus Nanosheets,” Tribol. Lett., 66(2), p. 61.
+[11] Wang, W., Xie, G., and Luo, J., 2018, “Black Phosphorus as a New Lubricant,”
+Friction, 6(1), pp. 116–142.
+[12] Puértolas, J. A., Castro, M., Morris, J. A., Rios, R., and Ansón-Casaos, A., 2019,
+“Tribological and Mechanical Properties of Graphene Nanoplatelets/PEEK
+Composites,” Carbon, 141, pp. 107–122.
+[13] Zhang, L., Qi, H., Li, G., Zhang, G., Wang, T., and Wang, Q., 2017, “Impact of
+Reinforcing Fillers’ Properties on Transfer Film Structure and Tribological
+Performance of POM-Based Materials,” Tribol. Int., 109, pp. 58–68.
+[14] Bart, J. C. J., Gucciardi, E., and Cavallaro, S., 2013, Biolubricants: Science and
+Technology, 1st ed., J. C. J. Bart, E. Gucciardi, and S. Cavallaro, eds., Woodhead
+Publishing Ltd., Cambridge, pp. 24–27.
+[15] Rothon, R., and DeArmitt, C., 2017, Brydson’s Plastics Materials, 8th ed., M.
+Gilbert, ed., Elsevier, Butterworth-Heinemann , pp. 169–204.
+[16] Yeo, J.-S., Seong, D.-W., and Hwang, S.-H., 2015, “Chemical Surface
+Modiﬁcation
+of
+Lignin
+Particle
+and
+Its
+Application
+as
+Filler
+in
+the
+Polypropylene Composites,” J. Ind. Eng. Chem., 31, pp. 80–85.
+[17] Wu, X., Qiu, J., Liu, P., and Sakai, E., 2013, “Preparation and Characterization of
+Polyamide Composites With Modiﬁed Graphite Powders,” J. Polym. Res.,
+20(11), pp. 284–291.
+[18] Jiang, H., Browning, R., Fincher, J., Gasbarro, A., Jones, S., and Sue, H.-J., 2008,
+“Inﬂuence of Surface Roughness and Contact Load on Friction Coefﬁcient and
+Scratch Behavior of Thermoplastic Oleﬁns,” Appl. Surf. Sci., 254(15),
+pp. 4494–4499.
+[19] Jiang, H., Cheng, Q., Jiang, C., Zhang, J., and Lib, Y., 2015, “Effect of Stick-Slip
+on the Scratch Performance of Polypropylene,” Tribol. Int., 91(1–5), pp. 1–5.
+[20] Bermúdez, M. D., Brostow, W., Carrión-Vilches, F. J., and Sanes, J., 2010,
+“Scratch Resistance of Polycarbonate Containing ZnO Nanoparticles: Effects of
+Sliding Direction,” J. Nanosci. Nanotechnol., 10(10), pp. 6683–6689.
+[21] Wong, M., Moyse, A., Lee, F., and Sue, H.-J., 2004, “Study of Surface Damage of
+Polypropylene Under Progressive Loading,” J. Mater. Sci., 39(10), pp. 3293–
+3308.
+[22] Jiang, H., Browning, R. L., Hossain, M. M., Sue, H.-J., and Fujiwar, M., 2010,
+“Quantitative Evaluation of Scratch Visibility Resistance of Polymers,” Appl.
+Surf. Sci., 256(21), pp. 6324–6329.
+[23] Chu, J., Xiang, C., Su, H. J., and Damon Hollis, R., 2000, “Scratch Resistance
+of
+Mineral-Filled
+Polypropylene
+Materials,”
+Polym.
+Eng.
+Sci.,
+40(4),
+pp. 944–955.
+[24] Moghbelli, E., Browning, R. L., Boo, W.-J., Hahn, S. F., Feick, L. J. E., and Su,
+H. J., 2008, “Effects of Molecular Weight and Thermal History on Scratch
+Behavior of Polypropylene Thin Sheets,” Tribol. Int., 41(5), pp. 425–433.
+[25] Zokaei, S., Lesan Khoch, R. M., and Bagheri, R., 2007, “Study of Scratch
+Resistance in Homo- and Co-Polypropylene Filled With Nanometric Calcium
+Carbonate,” Mater. Sci. Eng. A, 445–446, pp. 526–536. .
+[26] Feng, P., Zhang, C., Wu, Z., and Zhang, J., 2013, “Effect of Scratch Velocity on
+Deformation Features of C-Plane Sapphire During Nanoscratching,” J. Mech.
+Eng., 59(6), pp. 367–374.
+[27] Wong, M., Lim, G. T., Moyse, A., Reddy, J. N., and Sue, H.-J., 2004, “A New
+Test Methodology for Evaluating Scratch Resistance of Polymers,” Wear,
+256(11), pp. 1214–1227.
+[28] Jiang, H., Browning, R., and Sue, H.-J., 2009, “Understanding of Scratch-Induced
+Damage Mechanism,” Polymer, 50(16), pp. 4056–4065.
+[29] Purslow, D., 1981, “Some Fundamental Aspects of Composites Fractography,”
+Composites, 12(4), pp. 241–247.
+[30] Wang, H., Li, H., and Yan, F., 2005, “Reduction in Wear of Metakaolinite-Based
+Geopolymere Composite Through Filling of PTFE,” Wear, 258(10), pp. 1562–
+1566.
+[31] Kang, S. C., and Chung, D. W., 2003, “Improvement of Frictional Properties and
+Abrasive Wear Resistance of Nylon/Graphite Composite by Oil Impregnation,”
+Wear, 25(1–2), pp. 103–110.
+[32] Myshkin, N. K., Petrokovets, M. I., and Kovalev, A. V., 2005, “Tribology of
+Polymers: Adhesion, Friction, Wear, and Mass-Transfer,” Tribol. Int., 38(11–12),
+pp. 910–921.
+[33] Zhang, X., Liao, G., Jin, Q., Feng, X., and Jian, X., 2008, “On Dry Sliding
+Friction and Wear Behavior of PPESK ﬁlled with PTFE and Graphite,” Tribol.
+Int., 41(3), pp. 195–201.
+Journal of Tribology
+MAY 2020, Vol. 142 / 051901-9
+
+--- PAGE 10 ---
+[34] Chen, Z., Li, T., Yang, Y., Liu, X., and Lv, R., 2004, “Mechanical and
+Tribological Properties of PA/PPS Blends,” Wear, 257(7), pp. 696–707.
+[35] Chang, L., Zhang, Z., Zhang, H., and Schlarb, A. K., 2006, “On the Sliding Wear
+of Nanoparticle Filled Polyamide 66 Composites,” Compos. Sci. Technol.,
+66(16), pp. 3188–3198.
+[36] Byett, J. H., and Allen, C., 1992, “Dry Sliding Wear Behaviour of Polyamide 66
+and Polycarbonate Composites,” Tribol. Int., 25(4), pp. 237–246.
+[37] Samyn, P., De Baets, P., Schoukens, G., and Van Driessche, I., 2007, “Friction,
+Wear and Transfer of Pure and Internally Lubricated Cast Polyamides at Various
+Testing Scales,” Wear, 262(11–12), pp. 1433–1449.
+[38] Liu, L., Li, W., Tang, Y., Shen, B., and Hu, W., 2009, “Friction and Wear
+Properties of Short Carbon Fiber Reinforced Aluminum Matrix Composites,”
+Wear, 266(7–8), pp. 733–738.
+[39] Guo, Q. B., Rong, M. Z., Jia, G. L., Lau, K. T., and Zhang, M. Q., 2009, “Sliding
+Wear
+Performance
+of
+Nano-SiO2/Short
+Carbon
+Fiber/Epoxy
+Hybrid
+Composites,” Wear, 266(7–8), pp. 658–665.
+[40] Xiang, C., Sue, H.-J., Chu, J., and Coleman, B., 2001, “Scratch Behavior and
+Material Property Relationship in Polymers,” J. Polym. Sci. B: Polym. Phys.,
+39(1), pp. 47–59.
+[41] Phueakbuakhao, N., Prissanaroon-Ouajai, W., and Kreua-Ongarjnukool, N.,
+2008, “Effect of Coupling Agents on Mechanical Properties and Morphology
+of CaCO3-Filled Recycled High Density Polyethylene,” J. Metals, Mater.
+Miner., 18(2), pp. 131–135.
+[42] Deng, M., Tan, V. B. C., and Tay, T. E., 2004, “Atomistic Modeling: Interfacial
+Diffusion and Adhesion of Polycarbonate and Silanes,” Polymer, 45(18),
+pp. 6399–6407.
+051901-10 / Vol. 142, MAY 2020
+Transactions of the ASME

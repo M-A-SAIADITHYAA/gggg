@@ -1,0 +1,114 @@
+timestamp,paper_id,status,raw_rows,passing_rows,failing_rows,manual_rows,figures_saved,message
+2026-08-13 13:46:59,GOPOSS2020,failed,0,0,0,0,0,RuntimeError: Unable to upload GOPOSS2020.pdf after 3 attempts
+2026-08-13 13:48:06,GOPOSS2020,failed,0,0,0,0,0,ValueError: Gemini context response was not valid JSON; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/GOPOSS2020_context_raw_response.txt
+2026-08-13 13:51:01,GOPOSS2020,done,6,0,6,0,2,
+2026-08-16 19:34:38,ABRASIVEGFPA6,done,15,0,15,0,3,
+2026-08-16 19:36:05,CASTPA6G2018,done,7,5,2,0,3,
+2026-08-16 19:37:25,CHERNETS2023,done,30,30,0,0,2,
+2026-08-16 19:38:38,CHERNETSSWIC,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 19:39:20,GFRPA6PV2023,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 19:39:42,GNPCFPBO2019,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 19:41:25,IJEMS2018,done,16,0,16,0,3,
+2026-08-16 19:42:46,NANOZEOLITE2024,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 19:44:19,NEIS2017a,done,27,14,13,0,5,
+2026-08-16 19:45:29,PA66TEMP2019,done,3,0,3,0,0,"Figure scan warning: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 30.393203923s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '30s'}]}}"
+2026-08-16 19:52:33,CHERNETSSWIC,done,3,0,3,0,1,
+2026-08-16 19:54:05,GFRPA6PV2023,done,2,0,2,0,4,
+2026-08-16 19:55:29,GNPCFPBO2019,done,11,0,6,5,4,
+2026-08-16 19:57:11,NANOZEOLITE2024,done,8,0,8,0,6,
+2026-08-16 19:57:49,PMC2013,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 19:59:28,RSMPA662022,done,18,0,18,0,1,
+2026-08-16 20:00:52,SATHEESKUMAR2016,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-16 20:01:56,SICPA62020,failed,0,0,0,0,0,ValueError: Gemini response was not parseable CSV; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/SICPA62020_raw_response.txt
+2026-08-16 20:20:15,PMC2013,done,9,0,9,0,2,
+2026-08-16 20:22:16,SATHEESKUMAR2016,done,2,0,2,0,5,
+2026-08-16 20:23:35,SICPA62020,done,12,0,12,0,0,
+2026-08-16 20:25:07,SILICAPA62020,done,36,0,0,36,1,
+2026-08-16 20:26:46,SPRINGER2015,done,22,0,22,0,1,
+2026-08-16 20:28:34,UNAL2023,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNAL2023_raw_response.txt
+2026-08-16 20:29:37,WOLLASTONITE2014,done,27,0,27,0,2,
+2026-08-17 10:42:14,ABRASIVECFPA6,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-17 10:44:18,AUTAY2019,done,16,0,16,0,5,
+2026-08-17 10:46:20,CFPA6FFF2021,done,3,2,1,0,4,
+2026-08-17 10:47:57,NEIS2017b,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-17 10:48:56,PA66BLEND2017,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-17 10:50:09,PA6B2O32021,done,7,0,7,0,2,
+2026-08-17 10:51:16,PA6PPS2015,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/PA6PPS2015_raw_response.txt
+2026-08-17 10:52:16,PA6TPU2015,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-17 10:53:55,UNAL2023,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNAL2023_raw_response.txt
+2026-08-17 10:55:34,ABRASIVECFPA6,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/ABRASIVECFPA6_raw_response.txt
+2026-08-17 10:57:58,NEIS2017b,done,19,3,16,0,3,
+2026-08-17 11:05:40,ABRASIVECFPA6,failed,0,0,0,0,0,RuntimeError: Unable to upload ABRASIVECFPA6.pdf after 3 attempts
+2026-08-17 11:07:45,ABRASIVECFPA6,done,5,0,5,0,2,
+2026-08-17 11:09:41,PA66BLEND2017,done,5,4,1,0,2,
+2026-08-17 11:11:29,PA6PPS2015,done,3,0,3,0,5,
+2026-08-17 11:13:03,PA6TPU2015,done,12,0,12,0,2,
+2026-08-17 11:14:05,UNAL2023,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-08-17 11:17:04,UNAL2023,done,17,0,17,0,3,
+2026-08-24 13:22:49,PA6SiC2020,done,13,13,0,0,1,
+2026-08-24 22:35:13,BASAVARAJ2013,done,41,41,0,0,2,
+2026-08-24 22:36:49,BIRYUKOV2023,done,12,0,12,0,3,
+2026-08-24 22:38:50,CHEN2022,done,2,0,2,0,4,
+2026-08-24 22:40:13,JAPIC2022,done,6,6,0,0,0,"Figure scan warning: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'Deadline expired before operation could complete.', 'status': 'UNAVAILABLE'}}"
+2026-08-24 22:41:18,KHAKBAZ2024,failed,0,0,0,0,0,ValueError: Gemini response was not parseable CSV; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/KHAKBAZ2024_raw_response.txt
+2026-08-24 22:43:58,KUMAR2024,done,6,5,1,0,3,
+2026-08-24 23:17:43,KHAKBAZ2024,done,15,15,0,0,4,
+2026-08-24 23:19:13,LI2010,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/LI2010_raw_response.txt
+2026-08-24 23:20:26,LI2013,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/LI2013_raw_response.txt
+2026-08-24 23:23:01,LORBER2025,done,8,8,0,0,1,
+2026-08-24 23:26:44,SATHEESKUMAR2016b,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/SATHEESKUMAR2016b_raw_response.txt
+2026-08-24 23:34:58,SATHEESKUMAR2016b,done,24,24,0,0,2,
+2026-08-24 23:37:26,LI2010,done,14,13,1,0,2,
+2026-08-24 23:50:42,LI2013,done,2,2,0,0,1,
+2026-08-24 23:52:11,VIKRAM2024,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-08-24 23:53:10,YOU2014,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-08-24 23:54:58,ZAGHLOUL2023,done,2,0,2,0,4,
+2026-08-25 00:00:11,ZAGHLOUL2023b,done,6,2,3,1,1,
+2026-08-25 00:01:23,ZAVRAZHIN2025,done,11,11,0,0,2,
+2026-08-30 15:16:11,AVALLE2018,done,12,12,0,0,5,
+2026-08-30 15:18:06,BOLAT2024,done,21,0,21,0,2,
+2026-08-30 15:19:38,CARTLEDGE1996,done,9,0,9,0,0,
+2026-08-30 15:21:45,GRAF2026,done,20,0,20,0,4,
+2026-08-30 15:23:55,JOZWIK2020,done,2,2,0,0,2,
+2026-08-30 15:25:37,KARATAS2019,done,11,11,0,0,4,
+2026-08-30 15:27:16,KULKARNI2014,done,27,0,27,0,1,
+2026-08-30 15:31:30,KUMAR2025,done,30,30,0,0,2,
+2026-08-30 15:34:08,LI2024,done,24,24,0,0,4,
+2026-08-30 15:36:03,MAN2021,done,5,4,1,0,4,
+2026-08-30 15:37:33,MYALSKI2020,done,8,6,2,0,2,
+2026-08-30 15:41:20,OZSARIKAYA2025,done,3,2,1,0,3,
+2026-08-30 15:43:12,PALABIYIK2002,done,12,12,0,0,0,"Figure scan warning: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+2026-08-30 15:44:20,RANDHAWA2020,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/RANDHAWA2020_raw_response.txt
+2026-08-30 15:56:08,RANDHAWA2020,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-08-30 15:57:55,SOUNDARARAJAN2019,done,32,0,24,8,3,
+2026-08-30 15:58:38,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-08-30 16:00:38,VIKRAM2024,done,4,4,0,0,0,Figure scan warning: Gemini did not return a parseable page-classification JSON array
+2026-08-30 16:01:50,WALCZAK2022,done,8,8,0,0,0,
+2026-08-30 16:03:33,WANG2018,done,21,0,21,0,2,
+2026-08-30 16:05:13,YOU2014,done,2,2,0,0,1,
+2026-08-30 16:28:00,RANDHAWA2020,done,28,21,7,0,5,
+2026-08-30 16:29:06,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-08-30 16:31:20,ZHOU2018,done,6,6,0,0,2,
+2026-08-30 16:34:53,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-08-31 21:52:34,KUNISHIMA2021,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-08-31 21:54:36,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-08-31 21:59:10,KUNISHIMA2021,done,17,16,1,0,8,
+2026-08-31 22:01:19,UNNIKRISHNAN2022,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-09-01 21:04:33,KARPOV2025,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/KARPOV2025_raw_response.txt
+2026-09-01 21:06:39,LI2012,done,20,20,0,0,2,
+2026-09-01 21:09:20,NIE2010,failed,0,0,0,0,0,ValueError: Gemini response did not start with the required exact CSV header; saved raw response to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/NIE2010_raw_response.txt
+2026-09-01 21:13:44,PA66GFGREASE2020,done,2,0,2,0,0,Figure scan warning: Gemini did not return a parseable page-classification JSON array
+2026-09-01 21:17:18,RAJESH2001,done,19,0,7,12,2,
+2026-09-01 21:18:11,UNAL2013,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-09-01 21:19:22,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-09-01 21:27:30,UYSAL2024,failed,0,0,0,0,0,RuntimeError: Gemini did not return extracted CSV
+2026-09-01 21:29:08,VAIDYA2022,done,18,18,0,0,0,"Figure scan warning: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 51.892245554s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}"
+2026-09-01 21:33:17,KARPOV2025,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/KARPOV2025_raw_response.txt
+2026-09-01 21:36:13,NIE2010,done,27,20,7,0,0,"Figure scan warning: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+2026-09-01 21:40:24,UNAL2013,done,14,13,1,0,3,
+2026-09-01 21:41:09,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-09-01 21:51:57,KARPOV2025,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/KARPOV2025_raw_response.txt
+2026-09-01 21:54:24,UNNIKRISHNAN2022,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/UNNIKRISHNAN2022_raw_response.txt
+2026-09-01 22:00:49,KARPOV2025,failed,0,0,0,0,0,ValueError: Gemini CSV is missing schema columns or rows; saved to /Users/saiadithyaa/Documents/ChatGPT/final_year_project/logs/KARPOV2025_raw_response.txt
+2026-09-01 22:03:15,UNNIKRISHNAN2022,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context
+2026-09-18 21:04:34,DIFALLAH2020,failed,0,0,0,0,0,RuntimeError: Gemini did not return paper context

@@ -1,0 +1,17 @@
+paper_id,material_base,pa6_pct,glass_fiber_pct,graphite_pct,mos2_pct,pa66_pct,other_ingredients,other_ingredients_wt_pct,load_N,speed_ms,distance_m,PV_factor,counterface,test_type,environment,humidity_pct,temperature_C,fabrication,COF,wear_rate_mm3Nm,wear_volume_mm3,mass_loss_mg,contact_temp_C,source_doi,extraction_method,confidence,notes
+DIFALLAH2020,PA66,0,0,0,0,100,,,5,0.004,40,,steel,BoP,dry,,,injection,0.191,4.2e-05,0.0084,,,10.1115/1.4045804,line_graph,high,"Neat PA66 direct injection (M1), 10000 cycles at 1 Hz (stroke 2mm)"
+DIFALLAH2020,PA66,0,0,2,0,98,,,5,0.004,40,,steel,BoP,dry,,,injection,0.156,3.65e-05,0.0073,,,10.1115/1.4045804,line_graph,high,PA66 + 2 wt% Gr direct injection (M1)
+DIFALLAH2020,PA66,0,0,4,0,96,,,5,0.004,40,,steel,BoP,dry,,,injection,0.148,2.45e-05,0.0049,,,10.1115/1.4045804,line_graph,high,PA66 + 4 wt% Gr direct injection (M1)
+DIFALLAH2020,PA66,0,0,7,0,93,,,5,0.004,40,,steel,BoP,dry,,,injection,0.085,7e-06,0.0014,,,10.1115/1.4045804,line_graph,high,PA66 + 7 wt% Gr direct injection (M1)
+DIFALLAH2020,PA66,0,0,10,0,90,,,5,0.004,40,,steel,BoP,dry,,,injection,0.06,6.5e-06,0.0013,,,10.1115/1.4045804,line_graph,high,"PA66 + 10 wt% Gr direct injection (M1), lowest COF and wear"
+DIFALLAH2020,PA66,0,0,0,0,100,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.226,4.9e-05,0.0098,,,10.1115/1.4045804,line_graph,high,Neat PA66 extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,4,0,96,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.18,2.7e-05,0.0054,,,10.1115/1.4045804,line_graph,high,PA66 + 4 wt% Gr extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,7,0,93,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.167,2.15e-05,0.0043,,,10.1115/1.4045804,line_graph,high,PA66 + 7 wt% Gr extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,10,0,90,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.169,1.1e-05,0.0022,,,10.1115/1.4045804,line_graph,high,PA66 + 10 wt% Gr extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,0,2,98,,,5,0.004,40,,steel,BoP,dry,,,injection,0.188,3.1e-05,0.0062,,,10.1115/1.4045804,line_graph,high,PA66 + 2 wt% MoS2 direct injection (M1)
+DIFALLAH2020,PA66,0,0,0,4,96,,,5,0.004,40,,steel,BoP,dry,,,injection,0.177,2.7e-05,0.0054,,,10.1115/1.4045804,line_graph,high,PA66 + 4 wt% MoS2 direct injection (M1)
+DIFALLAH2020,PA66,0,0,0,7,93,,,5,0.004,40,,steel,BoP,dry,,,injection,0.16,2.35e-05,0.0047,,,10.1115/1.4045804,line_graph,high,"PA66 + 7 wt% MoS2 direct injection (M1), minimum COF for MoS2"
+DIFALLAH2020,PA66,0,0,0,10,90,,,5,0.004,40,,steel,BoP,dry,,,injection,0.21,2.65e-05,0.0053,,,10.1115/1.4045804,line_graph,high,PA66 + 10 wt% MoS2 direct injection (M1)
+DIFALLAH2020,PA66,0,0,0,4,96,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.185,4e-05,0.008,,,10.1115/1.4045804,line_graph,high,PA66 + 4 wt% MoS2 extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,0,7,93,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.177,3.25e-05,0.0065,,,10.1115/1.4045804,line_graph,high,PA66 + 7 wt% MoS2 extrusion then injection (M2)
+DIFALLAH2020,PA66,0,0,0,10,90,,,5,0.004,40,,steel,BoP,dry,,,extrusion,0.085,2.85e-05,0.0057,,,10.1115/1.4045804,line_graph,high,PA66 + 10 wt% MoS2 extrusion then injection (M2)
