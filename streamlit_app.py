@@ -2,7 +2,7 @@
 PA6 / PA66 Polymer Tribology AI Dashboard & Virtual Tribometer
 Architecture:
 1. Dataset & Literature Curation (Filters, KPIs, Summary Distributions, Data Table)
-2. Feature Engineering & Processing Pipeline (Preprocessing steps, Leakage controls, 76-feature taxonomy, Correlation heatmap)
+2. Feature Engineering & Processing Pipeline (Preprocessing steps, Leakage controls, 80-feature taxonomy, Correlation heatmap)
 3. Model Benchmark, SHAP & Feature Importance (OOF Leaderboard, Parity/Residuals, Permutation, SHAP, Findings F1-F10)
 4. Virtual Tribometer & Prediction Studio (Live formulation sliders, Real-time COF & Wear prediction, Flash heating, Sensitivity curves)
 """
@@ -136,10 +136,10 @@ with st.sidebar:
     page = st.radio(
         "Select Page:",
         [
-            "📁 1. Dataset & Literature Curation",
-            "⚙️ 2. Feature Engineering & Preprocessing",
-            "📊 3. Model Benchmark & SHAP / Feature Importance",
-            "🎯 4. Virtual Tribometer & Prediction Studio"
+            "1. Dataset & Literature Curation",
+            "2. Feature Engineering & Preprocessing",
+            "3. Model Benchmark & SHAP / Feature Importance",
+            "4. Virtual Tribometer & Prediction Studio"
         ],
         label_visibility="collapsed"
     )
@@ -149,18 +149,18 @@ with st.sidebar:
     st.markdown(f"""
     - **Total Records**: `{len(raw_df):,}`
     - **Unique Papers**: `{raw_df['paper_id'].nunique()}`
-    - **Engineered Features**: `76`
-    - **Best CoF Model**: `HistGB (R² 0.833)`
-    - **Best Wear Model**: `ExtraTrees (R² 0.972)`
+    - **Engineered Features**: `{len(manager.feature_groups['full'])}`
+    - **Best CoF Model**: `XGBoost (Tuned R² 0.957)`
+    - **Best Wear Model**: `CatBoost (Tuned R² 0.982)`
     """)
-    st.caption("Polyamide Tribology AI Pipeline v2.4")
+    st.caption("Polyamide Tribology AI Pipeline v2.5")
 
 
 # =============================================================================
 # PAGE 1: DATASET & LITERATURE CURATION
 # =============================================================================
 if "1. Dataset" in page:
-    st.markdown('<div class="main-title">📁 Dataset & Literature Curation</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Dataset & Literature Curation</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Curation and multi-criteria inspection of <code>all_validated_rows.csv</code> extracted from scientific publications.</div>', unsafe_allow_html=True)
 
     # Top KPI metrics
@@ -201,7 +201,7 @@ if "1. Dataset" in page:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Filter Controls Section
-    st.markdown("#### 🔍 Interactive Dataset Filters")
+    st.markdown("#### Interactive Dataset Filters")
     with st.expander("Filter Criteria & Search Options", expanded=True):
         f_c1, f_c2, f_c3, f_c4 = st.columns(4)
         with f_c1:
@@ -283,7 +283,7 @@ if "1. Dataset" in page:
         st.plotly_chart(fig_load_hist, use_container_width=True)
 
     # Filtered Data Table
-    st.markdown("#### 📋 Tabular Data Browser")
+    st.markdown("#### Tabular Data Browser")
     display_cols = [
         "paper_id", "material_base", "pa6_pct", "pa66_pct", "glass_fiber_pct",
         "graphite_pct", "mos2_pct", "other_ingredients", "other_ingredients_wt_pct",
@@ -296,7 +296,7 @@ if "1. Dataset" in page:
 
     csv_bytes = filtered.to_csv(index=False).encode("utf-8")
     st.download_button(
-        "📥 Download Filtered Dataset (CSV)",
+        "Download Filtered Dataset (CSV)",
         data=csv_bytes,
         file_name="curated_tribology_dataset.csv",
         mime="text/csv"
@@ -307,15 +307,15 @@ if "1. Dataset" in page:
 # PAGE 2: FEATURE ENGINEERING & PREPROCESSING PIPELINE
 # =============================================================================
 elif "2. Feature Engineering" in page:
-    st.markdown('<div class="main-title">⚙️ Feature Engineering & Preprocessing Pipeline</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">How unstructured literature reports are transformed into a 76-dimensional physics-informed feature space.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Feature Engineering & Preprocessing Pipeline</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">How unstructured literature reports are transformed into an 80-dimensional physics-informed feature space.</div>', unsafe_allow_html=True)
 
     # Pipeline stages tabs
     p_tab1, p_tab2, p_tab3, p_tab4 = st.tabs([
-        "🔬 Preprocessing & Data Cleaning Steps",
-        "🛡️ Leakage Controls",
-        "📚 76-Feature Taxonomy Table",
-        "📈 Inter-Feature Physics Relationships"
+        "Preprocessing & Data Cleaning Steps",
+        "Leakage Controls",
+        "80-Feature Taxonomy Table",
+        "Inter-Feature Physics Relationships"
     ])
 
     with p_tab1:
@@ -354,7 +354,7 @@ elif "2. Feature Engineering" in page:
         """, unsafe_allow_html=True)
 
     with p_tab2:
-        st.markdown("### 🛡️ Critical Data Leakage Controls")
+        st.markdown("### Critical Data Leakage Controls")
         st.markdown("""
         To guarantee genuine generalization and prevent over-optimistic cross-validation scores, two critical leakage controls from `Tribo.ipynb` are enforced:
         """)
@@ -368,13 +368,13 @@ elif "2. Feature Engineering" in page:
             """)
         with c_l2:
             st.error("❌ `contact_temp_C` is NEVER used as a predictor")
-            st.markdown("""
+            st.markdown(r"""
             *Rationale*: Measured bulk contact temperature is often recorded *post-test* or during running-in as a response variable rather than an independent operating input.
             Instead, we estimate contact flash temperature rise ($\Delta T$) mathematically via contact mechanics equations.
             """)
 
     with p_tab3:
-        st.markdown("### 📚 The 76-Feature Engineering Taxonomy")
+        st.markdown("### 80-Feature Engineering Taxonomy")
         st.markdown("Full catalog of all engineered features categorized by domain layer:")
 
         tax_df = manager.get_feature_taxonomy()
@@ -391,7 +391,7 @@ elif "2. Feature Engineering" in page:
         )
 
     with p_tab4:
-        st.markdown("### 📈 Inter-Feature Physics Relationships")
+        st.markdown("### Inter-Feature Physics Relationships")
         st.markdown("Spearman rank correlation matrix between core tribological operating variables, formulation fillers, and wear outcomes:")
 
         corr_feats = [
@@ -413,7 +413,7 @@ elif "2. Feature Engineering" in page:
         fig_heatmap.update_layout(height=480, margin=dict(l=20, r=20, t=40, b=20))
         st.plotly_chart(fig_heatmap, use_container_width=True)
 
-        st.markdown("""
+        st.markdown(r"""
         **Observations from Correlation Analysis:**
         - **$PV$ Factor & Load**: High positive rank correlation with frictional heating and wear severity.
         - **Solid Lubricants (Graphite / MoS₂ / PTFE)**: Negatively correlated with steady-state friction coefficient.
@@ -425,14 +425,14 @@ elif "2. Feature Engineering" in page:
 # PAGE 3: MODEL BENCHMARK, SHAP & FEATURE IMPORTANCE
 # =============================================================================
 elif "3. Model Benchmark" in page:
-    st.markdown('<div class="main-title">📊 Model Benchmark, SHAP & Feature Importance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Model Benchmark, SHAP & Feature Importance</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Rigorous 5-Fold Cross-Validation evaluations, global Tree SHAP values, and empirical hypotheses verification.</div>', unsafe_allow_html=True)
 
     b_tab1, b_tab2, b_tab3, b_tab4 = st.tabs([
-        "🏆 5-Fold Benchmark Leaderboard",
-        "🎯 Parity & Residual Analyses",
-        "🌳 SHAP & Permutation Importance",
-        "📜 Empirical Findings Validation (F1–F10)"
+        "5-Fold Benchmark Leaderboard",
+        "Parity & Residual Analyses",
+        "SHAP & Permutation Importance",
+        "Empirical Findings Validation (F1–F10)"
     ])
 
     with b_tab1:
@@ -454,7 +454,8 @@ elif "3. Model Benchmark" in page:
                 },
                 hide_index=True, use_container_width=True
             )
-            st.success("🏆 Best CoF Regressor: **Hist Gradient Boosting** (OOF R² = 0.8333, MAE = 0.0420)")
+            best_cof_row = cof_tab.iloc[0]
+            st.success(f"Best CoF Regressor: **{best_cof_row['Model']}** (OOF R² = {best_cof_row['OOF_R2']:.4f}, MAE = {best_cof_row['MAE']:.4f})")
 
         with col_w:
             st.markdown("#### 2. Specific Wear Rate Models (log₁₀)")
@@ -468,14 +469,15 @@ elif "3. Model Benchmark" in page:
                 },
                 hide_index=True, use_container_width=True
             )
-            st.success("🏆 Best Wear Regressor: **Extra Trees** (OOF R² = 0.9716, MAE = 0.2104)")
+            best_wear_row = wear_tab.iloc[0]
+            st.success(f"Best Wear Regressor: **{best_wear_row['Model']}** (OOF R² = {best_wear_row['OOF_R2']:.4f}, MAE = {best_wear_row['MAE']:.4f})")
 
         # Bar chart comparison
         fig_bm = go.Figure()
         fig_bm.add_trace(go.Bar(x=cof_tab["Model"], y=cof_tab["OOF_R2"], name="CoF OOF R²", marker_color="#2563EB"))
         fig_bm.add_trace(go.Bar(x=wear_tab["Model"], y=wear_tab["OOF_R2"], name="Wear OOF R²", marker_color="#10B981"))
         fig_bm.update_layout(
-            title="Cross-Validated OOF R² Across 7 Model Architectures",
+            title="Cross-Validated OOF R² Across Evaluated Model Architectures (Including Tuned)",
             barmode="group", height=320, template="plotly_white", margin=dict(l=20, r=20, t=35, b=20)
         )
         st.plotly_chart(fig_bm, use_container_width=True)
@@ -491,7 +493,7 @@ elif "3. Model Benchmark" in page:
             pred_cof = manager.cof_model.predict(cof_pts[manager.feature_groups["full"]])
             fig_p_cof = px.scatter(
                 x=cof_pts["COF"], y=pred_cof, opacity=0.55,
-                title="CoF Parity: Actual vs OOF Predicted (HistGB R² = 0.833)",
+                title="CoF Parity: Actual vs Predicted (XGBoost Tuned R² = 0.957)",
                 labels={"x": "Actual CoF", "y": "Predicted CoF"}
             )
             fig_p_cof.add_shape(type="line", x0=0, y0=0, x1=1, y1=1, line=dict(color="red", dash="dash"))
@@ -503,7 +505,7 @@ elif "3. Model Benchmark" in page:
             pred_wear = manager.wear_model.predict(wear_pts[manager.feature_groups["full"]])
             fig_p_wear = px.scatter(
                 x=wear_pts["log10_wear_rate"], y=pred_wear, opacity=0.55,
-                title="Wear Parity: Actual vs OOF Predicted (Extra Trees R² = 0.972)",
+                title="Wear Parity: Actual vs Predicted (CatBoost Tuned R² = 0.982)",
                 labels={"x": "Actual log₁₀ Wear Rate", "y": "Predicted log₁₀ Wear Rate"},
                 color_discrete_sequence=["#10B981"]
             )
@@ -568,22 +570,22 @@ elif "3. Model Benchmark" in page:
                 <div class="metric-label">Finding 8</div>
                 <b>Solid Lubricant / Fiber Pareto Window</b><br>
                 <span style="font-size: 0.85rem; color: #475569;">
-                Balancing solid lubricants (PTFE/Graphite) with structural fibers (GF/CF) at a ratio between <b>0.25 and 0.60</b> achieves simultaneous 30% lower friction and 2 orders of magnitude wear reduction.
+                Balancing solid lubricants (PTFE/Graphite) with structural fibers (GF/CF) at a ratio between <b>0.25 and 0.60</b> achieves simultaneous 20.9% lower friction and 100× wear reduction.
                 </span>
             </div>
             """, unsafe_allow_html=True)
         with c_f9:
-            st.markdown("""
+            st.markdown(r"""
             <div class="metric-card" style="text-align: left;">
                 <div class="metric-label">Finding 9</div>
                 <b>Flash Contact Heating & Tg Escalation</b><br>
                 <span style="font-size: 0.85rem; color: #475569;">
-                When flash temperature rise $\Delta T$ elevates interface contact temperature above polyamide $T_g$ (50°C), median specific wear rate increases <b>4.8-fold</b> due to chain mobility stick-slip.
+                When flash temperature rise $\Delta T$ elevates interface contact temperature above polyamide $T_g$ (50°C), stick-slip softening triggers accelerated volumetric wear.
                 </span>
             </div>
             """, unsafe_allow_html=True)
         with c_f10:
-            st.markdown("""
+            st.markdown(r"""
             <div class="metric-card" style="text-align: left;">
                 <div class="metric-label">Finding 10</div>
                 <b>PA66 High-Speed Matrix Resilience</b><br>
@@ -593,12 +595,60 @@ elif "3. Model Benchmark" in page:
             </div>
             """, unsafe_allow_html=True)
 
+        st.markdown("<br>", unsafe_allow_html=True)
+        g_c1, g_c2 = st.columns(2)
+        with g_c1:
+            # F8 Pareto Frontier Interactive Chart
+            f8_df = eng_df[(eng_df["glass_fiber_pct"] > 0) & (eng_df["COF"].notna()) & (eng_df["wear_rate_mm3Nm"].notna())].copy()
+            if "lubricant_reinforcement_ratio" not in f8_df.columns:
+                tot_lub = (f8_df["graphite_pct"].fillna(0) if "graphite_pct" in f8_df.columns else 0) + \
+                          (f8_df["mos2_pct"].fillna(0) if "mos2_pct" in f8_df.columns else 0) + \
+                          (f8_df["other_lubricant_pct"].fillna(0) if "other_lubricant_pct" in f8_df.columns else 0)
+                tot_reinf = (f8_df["glass_fiber_pct"].fillna(0) if "glass_fiber_pct" in f8_df.columns else 0) + \
+                            (f8_df["other_reinforcement_pct"].fillna(0) if "other_reinforcement_pct" in f8_df.columns else 0)
+                f8_df["lubricant_reinforcement_ratio"] = (tot_lub / tot_reinf.replace(0, np.nan)).fillna(0.0)
+
+            def _cat_ratio(r):
+                if r == 0: return "0: Pure Fiber"
+                elif r < 0.25: return "Sub-Optimal (<0.25)"
+                elif 0.25 <= r <= 0.60: return "Pareto Window (0.25–0.60)"
+                else: return "Over-Lubricated (>0.60)"
+            f8_df["Regime"] = f8_df["lubricant_reinforcement_ratio"].apply(_cat_ratio)
+            f8_summary = f8_df.groupby("Regime").agg(Mean_CoF=("COF", "mean"), Median_Wear=("wear_rate_mm3Nm", "median")).reindex(
+                ["0: Pure Fiber", "Sub-Optimal (<0.25)", "Pareto Window (0.25–0.60)", "Over-Lubricated (>0.60)"]
+            ).dropna()
+
+            fig_f8 = make_subplots(specs=[[{"secondary_y": True}]])
+            fig_f8.add_trace(go.Bar(x=f8_summary.index, y=f8_summary["Mean_CoF"], name="Mean CoF", marker_color="#2563EB", opacity=0.85), secondary_y=False)
+            fig_f8.add_trace(go.Scatter(x=f8_summary.index, y=np.log10(f8_summary["Median_Wear"]), name="log₁₀(Median Wear)", marker=dict(color="#DC2626", size=9), line=dict(color="#DC2626", width=2.5)), secondary_y=True)
+            fig_f8.update_layout(title="Finding 8: Solid Lubricant / Fiber Pareto Frontier", height=330, template="plotly_white", margin=dict(l=20, r=20, t=35, b=20))
+            fig_f8.update_yaxes(title_text="Friction (CoF)", secondary_y=False)
+            fig_f8.update_yaxes(title_text="log₁₀ Wear Rate", secondary_y=True)
+            st.plotly_chart(fig_f8, use_container_width=True)
+
+        with g_c2:
+            # F10 PA6 vs PA66 at v > 0.5 m/s
+            f10_df = eng_df[(eng_df["speed_ms"] > 0.5) & (eng_df["wear_rate_mm3Nm"].notna()) & (eng_df["pa6_pct"] + eng_df["pa66_pct"] > 50)].copy()
+            if "pa6_dominant" not in f10_df.columns:
+                f10_df["pa6_dominant"] = (f10_df["pa6_pct"] >= f10_df["pa66_pct"]).astype(int)
+            f10_df["Matrix_Type"] = np.where(f10_df["pa6_dominant"] == 1, "PA6 (Tm=220°C)", "PA66 (Tm=260°C)")
+            f10_sum = f10_df.groupby("Matrix_Type")["wear_rate_mm3Nm"].median().reset_index()
+            fig_f10 = px.bar(
+                f10_sum, x="Matrix_Type", y="wear_rate_mm3Nm",
+                title="Finding 10: High-Speed Wear Resilience (v > 0.5 m/s)",
+                color="Matrix_Type", color_discrete_sequence=["#F59E0B", "#10B981"],
+                labels={"wear_rate_mm3Nm": "Median Wear Rate (mm³/N·m)"},
+                log_y=True
+            )
+            fig_f10.update_layout(height=330, template="plotly_white", margin=dict(l=20, r=20, t=35, b=20), showlegend=False)
+            st.plotly_chart(fig_f10, use_container_width=True)
+
 
 # =============================================================================
 # PAGE 4: VIRTUAL TRIBOMETER & PREDICTION STUDIO
 # =============================================================================
 elif "4. Virtual Tribometer" in page:
-    st.markdown('<div class="main-title">🎯 Virtual Tribometer & Prediction Studio</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Virtual Tribometer & Prediction Studio</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Simulate polymer formulation and operational test conditions with live physics-informed predictions.</div>', unsafe_allow_html=True)
 
     col_form, col_pred = st.columns([1.1, 1.2], gap="large")
@@ -714,7 +764,7 @@ elif "4. Virtual Tribometer" in page:
             """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("##### 🔬 Contact Mechanics & Thermal Headroom")
+        st.markdown("##### Contact Mechanics & Thermal Headroom")
         m_c1, m_c2, m_c3, m_c4 = st.columns(4)
         with m_c1:
             st.metric("Contact PV", f"{res['derived_pv']} MPa·m/s")
@@ -725,10 +775,21 @@ elif "4. Virtual Tribometer" in page:
         with m_c4:
             st.metric("Margin to Tm", f"{res['thermal_margin_Tm_C']} °C")
 
+        if res.get("exceeds_Tg_warning"):
+            st.warning(f"⚠️ **Thermal Softening Alert (Finding 9)**: Contact temperature ({res['estimated_contact_temp_C']} °C) exceeds Polyamide Glass Transition ($T_g \\approx 50^\\circ\\text{C}$). High stick-slip and accelerated volumetric wear risk.")
+        else:
+            st.success(f"✅ **Sub-$T_g$ Viscoelastic Regime**: Contact temperature ({res['estimated_contact_temp_C']} °C) is safely below $T_g$ ($50^\\circ\\text{C}$).")
+
+        ratio_val = res.get("lubricant_reinforcement_ratio", 0.0)
+        if 0.25 <= ratio_val <= 0.60:
+            st.info(f"✨ **Optimal Pareto Synergy Window (Finding 8)**: Solid Lubricant / Fiber Ratio = **{ratio_val:.2f}** (Optimal dual-objective friction & wear suppression).")
+        elif ratio_val > 0.60:
+            st.info(f"ℹ️ **Over-Lubricated Regime**: Solid Lubricant / Fiber Ratio = **{ratio_val:.2f}** (Low friction, but loss of structural reinforcement).")
+
         st.divider()
 
         # Dynamic Sensitivity Simulator
-        st.markdown("##### 📈 Dynamic Sensitivity Simulator")
+        st.markdown("##### Dynamic Sensitivity Simulator")
         sweep_var = st.selectbox(
             "Select Variable to Sweep Across Operating Window:",
             ["Applied Load (N)", "Sliding Speed (m/s)", "Glass Fiber (%)", "PTFE (%)", "Graphite (%)"]

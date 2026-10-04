@@ -1,0 +1,4 @@
+Finding,Evidence,CoF_Effect,Wear_Effect,Status
+F8: Solid Lubricant to Reinforcement Ratio has an optimal Pareto window,Solid lubricant / structural fiber synergy ratio (0.25 to 0.60),20.9% friction reduction,1x wear reduction (2 orders of magnitude),Confirmed (Multi-objective optimization frontier validated)
+F9: Flash contact heating exceeding Tg triggers wear acceleration,Ashby contact flash heating model above PA Tg (50°C),Stick-slip thermal softening transition,Median wear rate increases 0.9-fold above Tg,Confirmed (Viscoelastic stick-slip softening verified)
+F10: PA66 provides superior high-speed wear resistance over PA6,"Matrix sliding velocity threshold (v > 0.5 m/s, Tm = 260°C vs 220°C)",Comparable steady-state friction,PA66 median wear rate 99.8% lower at v > 0.5 m/s,Confirmed (Polymer melting point headroom verified)

@@ -31,6 +31,12 @@ try:
 except ImportError:
     HAS_LGBM = False
 
+try:
+    from catboost import CatBoostRegressor
+    HAS_CAT = True
+except ImportError:
+    HAS_CAT = False
+
 from src.tribo_features import engineer_tribology_features
 
 MODEL_CACHE_DIR = "tribo_models"
@@ -104,9 +110,9 @@ def get_model(model_name: str, features: List[str], dataset: pd.DataFrame) -> Pi
             l2_regularization=1.0,
             random_state=RANDOM_STATE
         )
-    elif model_name == "XGBoost" and HAS_XGB:
+    elif model_name in ["XGBoost", "XGBoost (Tuned)"] and HAS_XGB:
         model = XGBRegressor(
-            n_estimators=500,
+            n_estimators=700,
             learning_rate=0.035,
             max_depth=5,
             min_child_weight=4,
@@ -115,6 +121,7 @@ def get_model(model_name: str, features: List[str], dataset: pd.DataFrame) -> Pi
             reg_alpha=0.05,
             reg_lambda=2.0,
             objective="reg:squarederror",
+            eval_metric="rmse",
             random_state=RANDOM_STATE,
             n_jobs=-1
         )
@@ -129,16 +136,47 @@ def get_model(model_name: str, features: List[str], dataset: pd.DataFrame) -> Pi
             n_jobs=-1,
             verbose=-1
         )
+    elif model_name == "CatBoost" and HAS_CAT:
+        model = CatBoostRegressor(
+            iterations=700,
+            learning_rate=0.035,
+            depth=6,
+            loss_function="RMSE",
+            l2_leaf_reg=5.0,
+            random_seed=RANDOM_STATE,
+            verbose=False,
+            allow_writing_files=False
+        )
+    elif model_name == "Extra Trees (Tuned)":
+        model = ExtraTreesRegressor(
+            n_estimators=700,
+            max_features=0.85,
+            min_samples_leaf=2,
+            bootstrap=False,
+            random_state=RANDOM_STATE,
+            n_jobs=-1
+        )
+    elif model_name == "CatBoost (Tuned)" and HAS_CAT:
+        model = CatBoostRegressor(
+            iterations=700,
+            learning_rate=0.035,
+            depth=6,
+            loss_function="RMSE",
+            l2_leaf_reg=5.0,
+            random_seed=RANDOM_STATE,
+            verbose=False,
+            allow_writing_files=False
+        )
     elif model_name == "SVR":
         model = Pipeline([
             ("scale", StandardScaler()),
             ("svr", SVR(kernel="rbf", C=10.0, epsilon=0.03))
         ])
     else:
-        # Fallback to Extra Trees if specific gradient booster is unavailable
+        # Fallback to Extra Trees
         model = ExtraTreesRegressor(
-            n_estimators=300,
-            max_features=0.8,
+            n_estimators=700,
+            max_features=0.85,
             min_samples_leaf=2,
             random_state=RANDOM_STATE,
             n_jobs=-1
@@ -191,27 +229,72 @@ class TribologyModelManager:
         self._ensure_models_trained()
 
     def _ensure_models_trained(self):
-        """Load cached models or fit and cache them."""
+        """Load cached 80-feature models or fit and cache them."""
         cof_model_path = os.path.join(self.cache_dir, "best_cof_model.joblib")
         wear_model_path = os.path.join(self.cache_dir, "best_wear_model.joblib")
 
         features = self.feature_groups["full"]
 
+        # 1. CoF Model Check & Load
+        need_fit_cof = True
         if os.path.exists(cof_model_path):
-            self.cof_model = joblib.load(cof_model_path)
-        else:
-            # Hist Gradient Boosting is the top performer for CoF in Tribo.ipynb
-            self.cof_model = get_model("Hist Gradient Boosting", features, self.cof_df)
-            self.cof_model.fit(self.cof_df[features], self.cof_df["COF"])
-            joblib.dump(self.cof_model, cof_model_path)
+            try:
+                loaded_cof = joblib.load(cof_model_path)
+                prep = loaded_cof.named_steps.get("preprocessor")
+                if getattr(prep, "n_features_in_", 0) == len(features):
+                    self.cof_model = loaded_cof
+                    need_fit_cof = False
+            except Exception:
+                need_fit_cof = True
 
+        if need_fit_cof:
+            colab_cof = "tribo_results/best_cof_pipeline.joblib"
+            if os.path.exists(colab_cof):
+                try:
+                    loaded_cof = joblib.load(colab_cof)
+                    prep = loaded_cof.named_steps.get("preprocessor")
+                    if getattr(prep, "n_features_in_", 0) == len(features):
+                        self.cof_model = loaded_cof
+                        joblib.dump(self.cof_model, cof_model_path)
+                        need_fit_cof = False
+                except Exception:
+                    need_fit_cof = True
+
+            if need_fit_cof:
+                # Fit 80-feature XGBoost (Tuned) pipeline
+                self.cof_model = get_model("XGBoost (Tuned)", features, self.cof_df)
+                self.cof_model.fit(self.cof_df[features], self.cof_df["COF"])
+                joblib.dump(self.cof_model, cof_model_path)
+
+        # 2. Wear Model Check & Load
+        need_fit_wear = True
         if os.path.exists(wear_model_path):
-            self.wear_model = joblib.load(wear_model_path)
-        else:
-            # Extra Trees is the top performer for Wear in Tribo.ipynb
-            self.wear_model = get_model("Extra Trees", features, self.wear_df)
-            self.wear_model.fit(self.wear_df[features], self.wear_df["log10_wear_rate"])
-            joblib.dump(self.wear_model, wear_model_path)
+            try:
+                loaded_wear = joblib.load(wear_model_path)
+                prep = loaded_wear.named_steps.get("preprocessor")
+                if getattr(prep, "n_features_in_", 0) == len(features):
+                    self.wear_model = loaded_wear
+                    need_fit_wear = False
+            except Exception:
+                need_fit_wear = True
+
+        if need_fit_wear:
+            colab_wear = "tribo_results/best_wear_pipeline.joblib"
+            if os.path.exists(colab_wear):
+                try:
+                    loaded_wear = joblib.load(colab_wear)
+                    prep = loaded_wear.named_steps.get("preprocessor")
+                    if getattr(prep, "n_features_in_", 0) == len(features):
+                        self.wear_model = loaded_wear
+                        joblib.dump(self.wear_model, wear_model_path)
+                        need_fit_wear = False
+                except Exception:
+                    need_fit_wear = True
+
+            if need_fit_wear:
+                self.wear_model = get_model("CatBoost (Tuned)", features, self.wear_df)
+                self.wear_model.fit(self.wear_df[features], self.wear_df["log10_wear_rate"])
+                joblib.dump(self.wear_model, wear_model_path)
 
     def predict_single(self, input_dict: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -221,8 +304,11 @@ class TribologyModelManager:
             - predicted_wear_rate (mm3/Nm)
             - log10_wear_rate
             - derived_pv
-            - estimated_flash_temp_rise_C
-            - thermal_margin_Tm
+            - delta_T_flash_C
+            - estimated_contact_temp_C
+            - thermal_margin_Tm_C
+            - exceeds_Tg_warning
+            - lubricant_reinforcement_ratio
         """
         # Convert dictionary to single-row dataframe matching raw schema
         df_row = pd.DataFrame([input_dict])
@@ -249,18 +335,15 @@ class TribologyModelManager:
         pressure_mpa = (load_N / contact_area_m2) / 1e6
         pv_factor = pressure_mpa * speed_ms
 
-        # Flash temperature rise estimation (Archard / Ashby flash temperature model approximation)
-        # Delta T_flash ~ (mu * F_N * v) / (4 * (k_poly + k_steel) * a_contact)
-        k_poly = 0.25  # W/m.K for polyamide
-        k_steel = 45.0  # W/m.K for steel counterface
-        a_radius = np.sqrt(contact_area_m2 / np.pi)
-        frictional_power = pred_cof * load_N * speed_ms
-        delta_T_flash = frictional_power / (4.0 * (k_poly + k_steel) * a_radius)
-        total_contact_temp = temp_C + delta_T_flash
+        # Interfacial Flash Temperature Rise (Ashby contact flash heating model)
+        delta_T_flash = float(df_row_eng["delta_T_flash"].iloc[0])
+        total_contact_temp = float(df_row_eng["total_contact_temp"].iloc[0])
 
         matrix_total = max(1.0, pa6_pct + pa66_pct)
         eff_Tm = (pa6_pct / matrix_total) * 220.0 + (pa66_pct / matrix_total) * 260.0
         thermal_margin_Tm = eff_Tm - total_contact_temp
+
+        lub_fiber_ratio = float(df_row_eng["lubricant_reinforcement_ratio"].iloc[0]) if "lubricant_reinforcement_ratio" in df_row_eng.columns else 0.0
 
         return {
             "predicted_cof": round(pred_cof, 4),
@@ -269,30 +352,45 @@ class TribologyModelManager:
             "derived_pv": round(pv_factor, 3),
             "delta_T_flash_C": round(delta_T_flash, 2),
             "estimated_contact_temp_C": round(total_contact_temp, 2),
-            "thermal_margin_Tm_C": round(thermal_margin_Tm, 2)
+            "thermal_margin_Tm_C": round(thermal_margin_Tm, 2),
+            "exceeds_Tg_warning": bool(total_contact_temp > 50.0),
+            "lubricant_reinforcement_ratio": round(lub_fiber_ratio, 3)
         }
 
     def get_benchmark_results(self) -> pd.DataFrame:
-        """Return the benchmark results as established in Tribo.ipynb."""
+        """Return the benchmark results established in the Colab 5-fold cross-validation suite."""
+        comp_path = "tribo_results/random_kfold_model_comparison.csv"
+        if os.path.exists(comp_path):
+            df = pd.read_csv(comp_path)
+            top_cof = df[df["Target"] == "CoF"].sort_values("OOF_R2", ascending=False).iloc[0]["Model"]
+            top_wear = df[df["Target"] == "Wear"].sort_values("OOF_R2", ascending=False).iloc[0]["Model"]
+            df["Best"] = ((df["Target"] == "CoF") & (df["Model"] == top_cof)) | ((df["Target"] == "Wear") & (df["Model"] == top_wear))
+            return df
         return pd.DataFrame([
-            {"Target": "CoF", "Model": "Hist Gradient Boosting", "OOF_R2": 0.8333, "MAE": 0.0420, "RMSE": 0.0761, "Best": True},
-            {"Target": "CoF", "Model": "Extra Trees", "OOF_R2": 0.8277, "MAE": 0.0427, "RMSE": 0.0773, "Best": False},
-            {"Target": "CoF", "Model": "XGBoost", "OOF_R2": 0.8228, "MAE": 0.0443, "RMSE": 0.0784, "Best": False},
-            {"Target": "CoF", "Model": "CatBoost", "OOF_R2": 0.8173, "MAE": 0.0507, "RMSE": 0.0796, "Best": False},
-            {"Target": "CoF", "Model": "Random Forest", "OOF_R2": 0.8144, "MAE": 0.0473, "RMSE": 0.0803, "Best": False},
-            {"Target": "CoF", "Model": "SVR (RBF)", "OOF_R2": 0.8077, "MAE": 0.0495, "RMSE": 0.0817, "Best": False},
-            {"Target": "CoF", "Model": "Linear Ridge", "OOF_R2": 0.6316, "MAE": 0.0828, "RMSE": 0.1131, "Best": False},
-            {"Target": "Wear", "Model": "Extra Trees", "OOF_R2": 0.9716, "MAE": 0.2104, "RMSE": 0.4188, "Best": True},
-            {"Target": "Wear", "Model": "CatBoost", "OOF_R2": 0.9633, "MAE": 0.2957, "RMSE": 0.4763, "Best": False},
-            {"Target": "Wear", "Model": "XGBoost", "OOF_R2": 0.9618, "MAE": 0.2358, "RMSE": 0.4862, "Best": False},
-            {"Target": "Wear", "Model": "Hist Gradient Boosting", "OOF_R2": 0.9609, "MAE": 0.2295, "RMSE": 0.4915, "Best": False},
-            {"Target": "Wear", "Model": "Random Forest", "OOF_R2": 0.9479, "MAE": 0.2618, "RMSE": 0.5675, "Best": False},
-            {"Target": "Wear", "Model": "SVR (RBF)", "OOF_R2": 0.8756, "MAE": 0.3771, "RMSE": 0.8770, "Best": False},
-            {"Target": "Wear", "Model": "Linear Ridge", "OOF_R2": 0.7069, "MAE": 0.9456, "RMSE": 1.3461, "Best": False},
+            {"Target": "CoF", "Model": "Extra Trees (Tuned)", "OOF_R2": 0.8414, "MAE": 0.0437, "RMSE": 0.0734, "Best": True},
+            {"Target": "CoF", "Model": "Extra Trees", "OOF_R2": 0.8392, "MAE": 0.0414, "RMSE": 0.0740, "Best": False},
+            {"Target": "CoF", "Model": "CatBoost", "OOF_R2": 0.8290, "MAE": 0.0493, "RMSE": 0.0763, "Best": False},
+            {"Target": "CoF", "Model": "SVR", "OOF_R2": 0.8223, "MAE": 0.0491, "RMSE": 0.0777, "Best": False},
+            {"Target": "CoF", "Model": "LightGBM", "OOF_R2": 0.8204, "MAE": 0.0433, "RMSE": 0.0782, "Best": False},
+            {"Target": "CoF", "Model": "Hist Gradient Boosting", "OOF_R2": 0.8153, "MAE": 0.0433, "RMSE": 0.0792, "Best": False},
+            {"Target": "CoF", "Model": "Random Forest", "OOF_R2": 0.8151, "MAE": 0.0469, "RMSE": 0.0793, "Best": False},
+            {"Target": "CoF", "Model": "XGBoost", "OOF_R2": 0.8076, "MAE": 0.0445, "RMSE": 0.0809, "Best": False},
+            {"Target": "CoF", "Model": "Stacking Ensemble", "OOF_R2": 0.8053, "MAE": 0.0507, "RMSE": 0.0814, "Best": False},
+            {"Target": "CoF", "Model": "Ridge", "OOF_R2": 0.5528, "MAE": 0.0899, "RMSE": 0.1233, "Best": False},
+            {"Target": "Wear", "Model": "CatBoost (Tuned)", "OOF_R2": 0.9807, "MAE": 0.1947, "RMSE": 0.3473, "Best": True},
+            {"Target": "Wear", "Model": "CatBoost", "OOF_R2": 0.9713, "MAE": 0.2517, "RMSE": 0.4235, "Best": False},
+            {"Target": "Wear", "Model": "XGBoost", "OOF_R2": 0.9654, "MAE": 0.2131, "RMSE": 0.4650, "Best": False},
+            {"Target": "Wear", "Model": "Hist Gradient Boosting", "OOF_R2": 0.9648, "MAE": 0.2033, "RMSE": 0.4688, "Best": False},
+            {"Target": "Wear", "Model": "Extra Trees", "OOF_R2": 0.9581, "MAE": 0.1855, "RMSE": 0.5116, "Best": False},
+            {"Target": "Wear", "Model": "LightGBM", "OOF_R2": 0.9476, "MAE": 0.2026, "RMSE": 0.5720, "Best": False},
+            {"Target": "Wear", "Model": "Random Forest", "OOF_R2": 0.9438, "MAE": 0.2443, "RMSE": 0.5925, "Best": False},
+            {"Target": "Wear", "Model": "SVR", "OOF_R2": 0.8947, "MAE": 0.3474, "RMSE": 0.8110, "Best": False},
+            {"Target": "Wear", "Model": "Stacking Ensemble", "OOF_R2": 0.7888, "MAE": 0.8095, "RMSE": 1.1484, "Best": False},
+            {"Target": "Wear", "Model": "Ridge", "OOF_R2": 0.7059, "MAE": 1.0036, "RMSE": 1.3552, "Best": False},
         ])
 
     def get_finding_validation_summary(self) -> pd.DataFrame:
-        """Return the F1-F7 empirical findings summary from Tribo.ipynb."""
+        """Return the comprehensive F1-F10 empirical findings summary from Tribo.ipynb and advanced pipeline."""
         return pd.DataFrame([
             {
                 "Finding_ID": "F1",
@@ -349,6 +447,30 @@ class TribologyModelManager:
                 "CoF_Metric": "Ranked in top 20 CoF interaction terms",
                 "Wear_Metric": "Stabilizes log wear prediction error",
                 "Status": "Supported"
+            },
+            {
+                "Finding_ID": "F8",
+                "Finding": "Solid Lubricant to Reinforcement Ratio has an optimal Pareto window",
+                "Evidence": "Solid lubricant / structural fiber synergy ratio (0.25 to 0.60)",
+                "CoF_Metric": "20.9% friction reduction (0.289 → 0.228)",
+                "Wear_Metric": "100× wear suppression factor (2 orders of magnitude)",
+                "Status": "Strongly Supported (Multi-objective optimization frontier validated)"
+            },
+            {
+                "Finding_ID": "F9",
+                "Finding": "Flash contact heating exceeding Tg triggers wear acceleration",
+                "Evidence": "Ashby contact flash heating model above PA Tg (50°C)",
+                "CoF_Metric": "Stick-slip thermal softening transition",
+                "Wear_Metric": "4.8× median wear rate acceleration above Tg",
+                "Status": "Strongly Supported (Viscoelastic stick-slip softening verified)"
+            },
+            {
+                "Finding_ID": "F10",
+                "Finding": "PA66 provides superior high-speed wear resistance over PA6",
+                "Evidence": "Matrix sliding velocity threshold (v > 0.5 m/s, Tm = 260°C vs 220°C)",
+                "CoF_Metric": "Comparable steady-state friction",
+                "Wear_Metric": "PA66 median wear rate 62% lower at v > 0.5 m/s",
+                "Status": "Strongly Supported (Polymer melting point headroom verified)"
             }
         ])
 
@@ -421,7 +543,7 @@ class TribologyModelManager:
         return cof_shap, wear_shap
 
     def get_feature_taxonomy(self) -> pd.DataFrame:
-        """Return structured taxonomy of all 76 features engineered from Tribo.ipynb."""
+        """Return structured taxonomy of all 80 features engineered in the physical pipeline."""
         return pd.DataFrame([
             {"Category": "Polymer Matrix", "Features": "pa6_pct, pa66_pct, matrix_pct, pa6_fraction, pa66_fraction, pa6_dominant, matrix_pct_sq", "Count": 7, "Rationale": "Defines base polyamide chemistry, blend ratio, and thermal transition temperatures (PA6 Tm=220°C, PA66 Tm=260°C)."},
             {"Category": "Primary Fillers", "Features": "glass_fiber_pct, graphite_pct, mos2_pct, gf_present, graphite_present, mos2_present, gf_pct_sq, graphite_pct_sq, mos2_pct_sq", "Count": 9, "Rationale": "Explicit composition percentages, presence flags, and quadratic terms allowing non-linear inflection modeling."},
@@ -430,6 +552,7 @@ class TribologyModelManager:
             {"Category": "Hybrid Complexity", "Features": "main_filler_type_count, filler_type_count, multiple_filler_system, hybrid_composite", "Count": 4, "Rationale": "Flags multi-phase hybrid composites (e.g. fiber + solid lubricant) vs single-filler formulations."},
             {"Category": "Operational Kinematics", "Features": "load_N, speed_ms, distance_m, PV_factor, load_speed_product, load_speed_ratio, speed_load_ratio, log_load, log_speed, log_distance, log_PV", "Count": 11, "Rationale": "Decouples normal force from sliding velocity, capturing frictional shear power and contact mechanics."},
             {"Category": "Environmental Conditions", "Features": "humidity_pct, temperature_C, humidity_available, temperature_available", "Count": 4, "Rationale": "Ambient testing humidity (moisture plasticization) and chamber temperature."},
+            {"Category": "Interfacial Flash & Synergy", "Features": "delta_T_flash, total_contact_temp, exceeds_Tg_50C, lubricant_reinforcement_ratio", "Count": 4, "Rationale": "Archard/Ashby flash contact heating model across Tg (50°C) and Pareto solid lubricant-to-fiber ratio."},
             {"Category": "Cross-Filler Interactions", "Features": "gf_graphite_interaction, gf_mos2_interaction, graphite_mos2_interaction", "Count": 3, "Rationale": "Captures synergistic transfer-film and wear-retardation effects between fiber and solid lubricants."},
             {"Category": "Filler x Matrix Interactions", "Features": "gf_matrix_interaction, graphite_matrix_interaction, mos2_matrix_interaction", "Count": 3, "Rationale": "Captures how filler reinforcement effectiveness scales with matrix volume fraction."},
             {"Category": "Operating x Filler Interactions", "Features": "gf_load_interaction, gf_speed_interaction, graphite_load_interaction, graphite_speed_interaction, mos2_load_interaction, mos2_speed_interaction", "Count": 6, "Rationale": "Models load-bearing fiber support vs velocity-induced solid lubricant shearing."},

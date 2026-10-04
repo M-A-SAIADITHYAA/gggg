@@ -81,9 +81,24 @@ def parse_other_ingredients(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def calculate_flash_temperature(row: pd.Series) -> float:
+    """Ashby/Archard interfacial flash temperature rise calculation (ΔT_flash in °C)."""
+    try:
+        load = float(row.get("load_N", 30.0)) if pd.notna(row.get("load_N")) else 30.0
+        speed = float(row.get("speed_ms", 0.5)) if pd.notna(row.get("speed_ms")) else 0.5
+        cof_approx = float(row.get("COF", 0.35)) if pd.notna(row.get("COF")) and row.get("COF") > 0 else 0.35
+        # Mechanical hardness H ~ 100 MPa, thermal conductivity K_poly ~ 0.25 W/mK, K_steel ~ 45 W/mK
+        a_contact = np.sqrt(max(load, 0.1) / (np.pi * 100e6))  # contact radius in meters
+        k_equiv = 0.25 + 45.0  # equivalent thermal conductivity
+        delta_T = (cof_approx * load * speed) / (4.0 * max(a_contact, 1e-6) * k_equiv)
+        return float(np.clip(delta_T, 0.0, 350.0))
+    except Exception:
+        return 0.0
+
+
 def engineer_tribology_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, List[str]]]:
     """
-    Build domain-rich features from Tribo.ipynb.
+    Build domain-rich features from Tribo.ipynb and advanced physical pipeline.
     Returns engineered dataframe and feature groupings.
     """
     df = data.copy()
@@ -132,6 +147,11 @@ def engineer_tribology_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[
     df["graphite_matrix_ratio"] = (df["graphite_pct"] / matrix_safe).fillna(0.0)
     df["mos2_matrix_ratio"] = (df["mos2_pct"] / matrix_safe).fillna(0.0)
 
+    total_solid_lubricant = df["graphite_pct"] + df["mos2_pct"] + df["other_lubricant_pct"]
+    total_reinforcement = df["glass_fiber_pct"] + df["other_reinforcement_pct"]
+    reinf_safe = total_reinforcement.replace(0, np.nan)
+    df["lubricant_reinforcement_ratio"] = (total_solid_lubricant / reinf_safe).fillna(0.0)
+
     # 7. Hybrid / Complexity
     df["main_filler_type_count"] = df["gf_present"] + df["graphite_present"] + df["mos2_present"]
     df["filler_type_count"] = df["main_filler_type_count"] + (df["other_total_pct"] > 0).astype(int)
@@ -158,6 +178,10 @@ def engineer_tribology_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[
 
     df["humidity_available"] = df["humidity_pct"].notna().astype(int)
     df["temperature_available"] = df["temperature_C"].notna().astype(int)
+
+    df["delta_T_flash"] = df.apply(calculate_flash_temperature, axis=1)
+    df["total_contact_temp"] = df["temperature_C"].fillna(23.0) + df["delta_T_flash"]
+    df["exceeds_Tg_50C"] = (df["total_contact_temp"] > 50.0).astype(int)
 
     # 9. Non-linear Composition terms (squared)
     df["gf_pct_sq"] = df["glass_fiber_pct"] ** 2
@@ -218,7 +242,7 @@ def engineer_tribology_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[
         "other_lubricant_count", "other_reinforcement_count", "other_nanofiller_count",
         "known_filler_pct", "total_filler_pct", "reported_composition_pct", "composition_gap",
         "filler_matrix_ratio", "gf_matrix_ratio", "graphite_matrix_ratio", "mos2_matrix_ratio",
-        "main_filler_type_count", "filler_type_count", "multiple_filler_system", "hybrid_composite",
+        "lubricant_reinforcement_ratio", "main_filler_type_count", "filler_type_count", "multiple_filler_system", "hybrid_composite",
         "gf_pct_sq", "graphite_pct_sq", "mos2_pct_sq", "total_filler_pct_sq", "matrix_pct_sq"
     ]
 
@@ -226,7 +250,8 @@ def engineer_tribology_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[
         "load_N", "speed_ms", "distance_m", "PV_factor", "humidity_pct", "temperature_C",
         "load_speed_product", "load_speed_ratio", "speed_load_ratio",
         "log_load", "log_speed", "log_distance", "log_PV",
-        "humidity_available", "temperature_available"
+        "humidity_available", "temperature_available",
+        "delta_T_flash", "total_contact_temp", "exceeds_Tg_50C"
     ]
 
     interaction_features = [
