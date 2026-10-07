@@ -1,0 +1,295 @@
+{
+  "summary_table": [
+    [
+      "No",
+      "Authors & Year",
+      "Title",
+      "Journal",
+      "Methods Used",
+      "Key Findings"
+    ],
+    [
+      "1",
+      "M. Y. M. Zaghloul et al. (2024)",
+      "Assessment of the tribological performance of glass fiber reinforced polyamide 6 under harsh abrasive environments",
+      "Tribology International",
+      "Twin-screw extrusion + Pin-on-disk",
+      "25% GF reinforcement increased the PV limit to 1.04 MPa\u00b7m/s; fibres act as a protective matrix shield."
+    ],
+    [
+      "2",
+      "C. de Paula Anjolleto et al. (2024)",
+      "Mechanical and tribological characterization of PA66/graphite nanocomposites",
+      "Surfaces and Interfaces",
+      "Melt-mixing + Calotest (micro-abrasion)",
+      "3 wt% nanographite reduced wear by >50%, acting as both a structural hardener and solid lubricant."
+    ],
+    [
+      "3",
+      "M. Bolat & B. Ergene (2024)",
+      "Wear performance of short fiber added polyamide composites produced by additive manufacturing",
+      "Polymer Composites",
+      "FDM 3D Printing + Thermal Annealing",
+      "Thermal annealing significantly improved inter-layer adhesion and surface hardness, reducing specific wear."
+    ],
+    [
+      "4",
+      "X. Li et al. (2024)",
+      "Study on tribological properties of gear material PA66 reinforced by glass fibers",
+      "Tribology Letters",
+      "Pin-on-disk + Humidity Conditioning",
+      "High humidity caused surface plasticisation, entirely shifting wear from adhesive to severe abrasive."
+    ],
+    [
+      "5",
+      "A. Kumar et al. (2025)",
+      "Effect of Molybdenum Disulfide ($MoS_2$) reinforcement on the structural, thermal, mechanical, and tribological analysis of novel polyamide 6,6",
+      "J. Appl. Polym. Sci.",
+      "Linear Reciprocating Tribometer (LRT)",
+      "5 wt% $MoS_2$ was the optimal limit for wear reduction; higher loadings caused abrasive particle agglomeration."
+    ],
+    [
+      "6",
+      "R. Srinivasa et al. (2024)",
+      "Effect of surface-treated nanofillers on abrasive wear of CF/PA composites",
+      "Tribology in Industry",
+      "Multi-pass abrasive testing",
+      "Silane surface treatment enhanced interfacial bonding, halving the specific wear rate vs. untreated fibres."
+    ],
+    [
+      "7",
+      "B. Siddikali & S. Sreekanth (2025)",
+      "Evaluation of mechanical, thermal, and tribological properties of 3D-printed nylon (PA6) hybrid composites",
+      "J. Compos. Sci.",
+      "FDM 3D Printing + Pin-on-disk",
+      "MWCNTs bridged gaps between short carbon fibres, improving composite thermal stability and wear resistance."
+    ],
+    [
+      "8",
+      "Y. Zhang & L. Chang (2025)",
+      "Effects of absorption on the tribological properties of carbon fiber reinforced polyamide-6 composites",
+      "Journal of Tribology",
+      "Humidity saturation conditioning",
+      "Moisture absorption drastically reduced matrix shear strength, expediting premature carbon fibre pull-out."
+    ],
+    [
+      "9",
+      "S. Kumar et al. (2024)",
+      "Effect of hybrid graphene nanoplatelets and molybdenum disulfide fillers on PA66 composites",
+      "Polymer Composites",
+      "Melt-mixing + Continuous Sliding",
+      "5 wt% hybrid GnP/$MoS_2$ formed a highly stable, thermally conductive transfer film on the counterface."
+    ],
+    [
+      "10",
+      "J. Sun et al. (2024)",
+      "Preparation and properties of PA6 composites reinforced by $CaSO_4$ whiskers",
+      "Polymer Composites",
+      "Melt-compounding + XRD/DSC",
+      "$CaSO_4$ mineral whiskers acted as nucleating agents, increasing PA6 matrix crystallinity by 15%."
+    ],
+    [
+      "11",
+      "M. Mohsenzadeh et al. (2025)",
+      "Quantitative analysis of tribological performance in PA6/nano-zeolite composites: Integration of CV and ML",
+      "Tribology International",
+      "U-Net Semantic Segmentation + SVR",
+      "Machine learning predicted polymer macroscopic wear rates with 94% accuracy based purely on filler dispersion."
+    ],
+    [
+      "12",
+      "A. Bar\u00e1th et al. (2025)",
+      "Effect of relative humidity on tribological and mechanical properties of PA6-based composites",
+      "MSPE",
+      "RH-controlled tribometer",
+      "80%+ relative humidity increased the specific wear rate of porous 3D-printed parts by 40%."
+    ],
+    [
+      "13",
+      "M. Sahin et al. (2024)",
+      "Investigation of the mechanical and tribological properties of thermal aged PA6/CF composites",
+      "Polymer Composites",
+      "Accelerated Thermal Aging (80\u2013120\u00b0C)",
+      "Prolonged thermal aging caused severe matrix embrittlement, increasing the volumetric wear rate by 38%."
+    ],
+    [
+      "14",
+      "K. Srinivas et al. (2024)",
+      "Tribological behavior of silane-treated nanofiller reinforced CF/PA6 composites",
+      "Tribology in Industry",
+      "Multi-pass abrasive testing",
+      "Silane-treated composites exhibited 45% better fibre retention within the matrix during repeated abrasion."
+    ],
+    [
+      "15",
+      "M. Unal & M. Tasdemir (2025)",
+      "Tribological performance of cast and extruded PA6 for wafer machinery applications",
+      "Plast. Rubber Compos.",
+      "Top-disk tribometer",
+      "Cast PA6G (anionic polymerization) achieved a lower friction coefficient (0.16) than standard extruded PA6."
+    ],
+    [
+      "16",
+      "T. Shibata et al. (2024)",
+      "Dry sliding wear of PA66 filled with rice bran ceramics under wide PV range",
+      "Tribology Online",
+      "Dry sliding across extreme PV limits",
+      "Eco-friendly Rice Bran Ceramics (RBC) prevented catastrophic thermal melting transitions at high PV loads."
+    ],
+    [
+      "17",
+      "M. Czerniec & J. Czerniec (2025)",
+      "Quantitative mapping of linear tooth profile wear for PA6 and PA66 gears",
+      "Appl. Eng. Letters",
+      "Gear mesh testing + Contact mechanics",
+      "Successfully established mathematical mapping between initial contact pressures and geometric gear tooth wear."
+    ],
+    [
+      "18",
+      "R. Sivakumar et al. (2025)",
+      "Coupled numerical-experimental wear prediction of PA66 sprockets using UMESHMOTION",
+      "Proc IMechE Part L",
+      "ABAQUS UMESHMOTION + FEA",
+      "Drive chain elongation dynamically increased contact pressure by 1.5x, leading to a predicted 90 \u00b5m wear depth."
+    ],
+    [
+      "19",
+      "H. Wang et al. (2025)",
+      "High-temperature sliding friction and wear of glass fiber reinforced PA66",
+      "J. Tribology",
+      "High-temp sliding (up to 110\u00b0C)",
+      "Friction surged 8.7x at 110\u00b0C due to modulus drop, but 33% GF reinforcement stabilized the mechanical load."
+    ],
+    [
+      "20",
+      "L. Zhang et al. (2025)",
+      "Fretting wear mechanisms of GF-PA66 in high-speed railway infrastructure",
+      "Engineering Research",
+      "High-frequency fretting + 3D microscopy",
+      "High-frequency micromotion induced rapid subsurface fatigue and distinct micro-cratering independent of sliding."
+    ],
+    [
+      "21",
+      "Y. Liu et al. (2025)",
+      "Effect of PA66 dip-coating process on wind turbine pitch bearing cages",
+      "Int. J. Eng. Res. Tech.",
+      "Large-scale friction/wear testing",
+      "PA66 vulcanized dip-coating shifted contact from steel-to-steel to plastic-to-steel, extending bearing fatigue life."
+    ],
+    [
+      "22",
+      "K. Muthu et al. (2025)",
+      "Failure analysis of SCF-PA66 gears under combined torque and bending fatigue",
+      "Evergreen",
+      "Multi-axial gear load testing",
+      "Short Carbon Fiber (SCF) reinforcement successfully extended PA66 gear fatigue life to $2 \\times 10^9$ cycles."
+    ]
+  ],
+  "gaps_table": [
+    [
+      "Paper Focus",
+      "What the Paper Does",
+      "What is Missing (Gap)"
+    ],
+    [
+      "Glass fiber reinforced PA6",
+      "Studies wear under high PV conditions using experiments",
+      "No predictive model for performance under varying conditions"
+    ],
+    [
+      "PA66 + Graphite nanocomposites",
+      "Shows reduction in wear and friction using nanofillers",
+      "No general model to predict optimal filler percentage"
+    ],
+    [
+      "3D printed PA composites",
+      "Evaluates effect of thermal annealing on wear",
+      "No prediction across different manufacturing conditions"
+    ],
+    [
+      "Humidity effects on PA66",
+      "Studies environmental impact on wear behavior",
+      "No combined modeling of humidity + load + speed"
+    ],
+    [
+      "MoS\u2082 reinforced PA66",
+      "Identifies optimal filler percentage experimentally",
+      "No computational approach to generalize results"
+    ],
+    [
+      "Surface-treated nanofillers",
+      "Improves wear using chemical treatment",
+      "No prediction of treatment effectiveness across composites"
+    ],
+    [
+      "Hybrid carbon fillers (MWCNT + CF)",
+      "Improves thermal and wear properties",
+      "No scalable model for hybrid filler combinations"
+    ],
+    [
+      "Moisture absorption studies",
+      "Analyzes degradation due to humidity",
+      "No predictive framework for environmental effects"
+    ],
+    [
+      "Hybrid GnP + MoS\u2082 fillers",
+      "Shows improved transfer film formation",
+      "No optimization framework for hybrid ratios"
+    ],
+    [
+      "Mineral fillers (CaSO\u2084 whiskers)",
+      "Improves crystallinity and wear resistance",
+      "No dataset for comparing multiple filler types"
+    ],
+    [
+      "ML-based nano-zeolite study",
+      "Uses ML for wear prediction (single dataset)",
+      "Limited dataset, not generalized across materials"
+    ],
+    [
+      "Thermal aging studies",
+      "Evaluates long-term degradation",
+      "No predictive model for aging effects"
+    ],
+    [
+      "Silane-treated composites",
+      "Improves interfacial bonding and wear",
+      "No multi-parameter predictive analysis"
+    ],
+    [
+      "Cast vs extruded PA6",
+      "Compares processing methods",
+      "No model to predict performance across processes"
+    ],
+    [
+      "High-temperature PA66 studies",
+      "Studies wear at elevated temperatures",
+      "No prediction across temperature ranges"
+    ],
+    [
+      "Sustainable ceramic fillers",
+      "Improves high-load performance",
+      "No scalable design framework"
+    ],
+    [
+      "Gear wear studies",
+      "Maps wear in gear systems",
+      "No generalized tribology prediction model"
+    ],
+    [
+      "FEA-based wear prediction",
+      "Uses simulation for specific cases",
+      "Not data-driven, limited to specific setups"
+    ],
+    [
+      "Fretting wear studies",
+      "Studies vibration-induced wear",
+      "No integration with sliding wear models"
+    ],
+    [
+      "Industrial-scale applications",
+      "Demonstrates real-world performance",
+      "No computational system for material selection"
+    ]
+  ]
+}
