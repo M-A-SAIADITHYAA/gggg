@@ -133,7 +133,7 @@ def build_phase2_report():
             r = p_cap.add_run(f"[{caption_text} — Asset file not found: {img_path}]")
             r.font.bold = True
 
-    def add_custom_table(headers, data, caption=None, col_widths=None, add_space_after=True, font_size_body=None, font_size_header=None):
+    def add_custom_table(headers, data, caption=None, col_widths=None, col_alignments=None, add_space_after=True, font_size_body=None, font_size_header=None):
         if caption:
             p_cap = doc.add_paragraph()
             p_cap.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -144,11 +144,35 @@ def build_phase2_report():
             r.font.size = Pt(12.0)
             r.font.bold = True
 
-        table = doc.add_table(rows=len(data) + 1, cols=len(headers))
+        num_cols = len(headers)
+        table = doc.add_table(rows=len(data) + 1, cols=num_cols)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         table.autofit = False
 
-        num_cols = len(headers)
+        # Completely remove all table borders and boundaries (no boxes, no lines, plain)
+        tblPr = table._tbl.tblPr
+        tblBorders = parse_xml(r'''
+            <w:tblBorders %s>
+                <w:top w:val="none"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="none"/>
+                <w:right w:val="none"/>
+                <w:insideH w:val="none"/>
+                <w:insideV w:val="none"/>
+            </w:tblBorders>
+        ''' % nsdecls("w"))
+        tblPr.append(tblBorders)
+
+        tblCellMar = parse_xml(r'''
+            <w:tblCellMar %s>
+                <w:top w:w="40" w:type="dxa"/>
+                <w:left w:w="30" w:type="dxa"/>
+                <w:bottom w:w="40" w:type="dxa"/>
+                <w:right w:w="30" w:type="dxa"/>
+            </w:tblCellMar>
+        ''' % nsdecls("w"))
+        tblPr.append(tblCellMar)
+
         if font_size_header is None:
             if num_cols >= 9:
                 hdr_font_sz = Pt(8.0)
@@ -169,13 +193,12 @@ def build_phase2_report():
         else:
             body_font_sz = font_size_body
 
-        # Dynamic cell padding (in dxa)
         if num_cols >= 9:
-            cell_top, cell_bot, cell_l, cell_r = 50, 50, 30, 30
+            cell_top, cell_bot, cell_l, cell_r = 50, 50, 25, 25
         elif num_cols >= 6:
-            cell_top, cell_bot, cell_l, cell_r = 60, 60, 40, 40
+            cell_top, cell_bot, cell_l, cell_r = 60, 60, 35, 35
         else:
-            cell_top, cell_bot, cell_l, cell_r = 70, 70, 80, 80
+            cell_top, cell_bot, cell_l, cell_r = 70, 70, 50, 50
 
         # Normalize column widths to fit strictly within 6.50 inches printable width
         if not col_widths or len(col_widths) != num_cols:
@@ -187,6 +210,34 @@ def build_phase2_report():
                 col_widths = [round(w * scale, 4) for w in col_widths]
             col_widths[-1] = round(6.50 - sum(col_widths[:-1]), 4)
 
+        # Consistent per-column alignment
+        center_header_keywords = {
+            "NO", "NO.", "SL. NO.", "CHAPTER NO.", "TABLE NO.", "FIGURE NO.", "PAGE NO.",
+            "ID", "RANK", "FOLD", "TARGET", "STATUS", "VALIDATION STATUS",
+            "OOF R²", "R²", "COF R²", "WEAR R²", "MAE", "COF MAE", "WEAR MAE",
+            "RMSE", "COF RMSE", "WEAR RMSE", "N_TRAIN", "N_VAL", "STD (Σ)", "GAIN (%)",
+            "MEAN |SHAP|", "|SHAP|", "FOLD R²", "OPTIMAL IDENTIFIED"
+        }
+
+        alignments = []
+        for idx, title in enumerate(headers):
+            if col_alignments and idx < len(col_alignments):
+                alignments.append(col_alignments[idx])
+            else:
+                clean_title = title.strip().upper()
+                if clean_title in center_header_keywords:
+                    alignments.append(WD_ALIGN_PARAGRAPH.CENTER)
+                else:
+                    col_vals = [str(row[idx]).strip() for row in data if idx < len(row) and row[idx]]
+                    all_short_numbers = len(col_vals) > 0 and all(
+                        len(v) <= 10 and (any(c.isdigit() for c in v) or v.upper() in ["N/A", "-", "NA", "N.A."])
+                        for v in col_vals
+                    )
+                    if all_short_numbers:
+                        alignments.append(WD_ALIGN_PARAGRAPH.CENTER)
+                    else:
+                        alignments.append(WD_ALIGN_PARAGRAPH.LEFT)
+
         # Header Row
         hdr_row = table.rows[0]
         trPr = hdr_row._tr.get_or_add_trPr()
@@ -194,12 +245,24 @@ def build_phase2_report():
 
         for idx, title in enumerate(headers):
             cell = hdr_row.cells[idx]
-            set_cell_background(cell, "F1F5F9")
-            set_cell_margins(cell, top=cell_top + 25, bottom=cell_bot + 25, left=cell_l, right=cell_r)
+            tcPr = cell._tc.get_or_add_tcPr()
+            tcBorders = parse_xml(r'''
+                <w:tcBorders %s>
+                    <w:top w:val="none"/>
+                    <w:left w:val="none"/>
+                    <w:bottom w:val="none"/>
+                    <w:right w:val="none"/>
+                </w:tcBorders>
+            ''' % nsdecls("w"))
+            tcPr.append(tcBorders)
+            tcPr.append(parse_xml(f'<w:vAlign {nsdecls("w")} w:val="top"/>'))
+
+            set_cell_margins(cell, top=cell_top + 15, bottom=cell_bot + 15, left=cell_l, right=cell_r)
             p = cell.paragraphs[0]
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.alignment = alignments[idx]
             p.paragraph_format.line_spacing = 1.10
-            p.paragraph_format.space_after = Pt(0)
+            p.paragraph_format.space_before = Pt(3)
+            p.paragraph_format.space_after = Pt(3)
             r = p.add_run(title)
             r.font.name = 'Times New Roman'
             r.font.size = hdr_font_sz
@@ -210,19 +273,29 @@ def build_phase2_report():
             row = table.rows[r_idx + 1]
             trPr_row = row._tr.get_or_add_trPr()
             trPr_row.append(parse_xml(f'<w:cantSplit {nsdecls("w")}/>'))
-            bg_color = "FAFAFA" if r_idx % 2 == 1 else "FFFFFF"
             for c_idx, val in enumerate(row_values):
                 cell = row.cells[c_idx]
-                set_cell_background(cell, bg_color)
+                tcPr = cell._tc.get_or_add_tcPr()
+                tcBorders = parse_xml(r'''
+                    <w:tcBorders %s>
+                        <w:top w:val="none"/>
+                        <w:left w:val="none"/>
+                        <w:bottom w:val="none"/>
+                        <w:right w:val="none"/>
+                    </w:tcBorders>
+                ''' % nsdecls("w"))
+                tcPr.append(tcBorders)
+                tcPr.append(parse_xml(f'<w:vAlign {nsdecls("w")} w:val="top"/>'))
+
                 set_cell_margins(cell, top=cell_top, bottom=cell_bot, left=cell_l, right=cell_r)
                 p = cell.paragraphs[0]
+                p.alignment = alignments[c_idx]
                 p.paragraph_format.line_spacing = 1.10
-                p.paragraph_format.space_after = Pt(0)
-                if len(str(val)) < 15 and any(char.isdigit() for char in str(val)):
-                    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                else:
-                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                r = p.add_run(str(val))
+                p.paragraph_format.space_before = Pt(1.5)
+                p.paragraph_format.space_after = Pt(1.5)
+
+                val_str = str(val).replace("$MoS_2$", "MoS₂").replace("$kv$", "kv").replace("$Tg$", "Tg")
+                r = p.add_run(val_str)
                 r.font.name = 'Times New Roman'
                 r.font.size = body_font_sz
 
@@ -249,7 +322,7 @@ def build_phase2_report():
         if add_space_after:
             p_after = doc.add_paragraph()
             p_after.paragraph_format.space_before = Pt(0)
-            p_after.paragraph_format.space_after = Pt(4)
+            p_after.paragraph_format.space_after = Pt(6)
             p_after.paragraph_format.line_spacing = 1.0
             r_sp = p_after.add_run()
             r_sp.font.size = Pt(2)
@@ -1107,7 +1180,7 @@ def build_phase2_report():
         ["Wear", "8", "SVR (RBF)", "0.8947", "0.3474", "0.8110", "0.8955", "0.0453", "+26.75%", "Benchmark"],
         ["Wear", "9", "Linear Ridge", "0.7059", "1.0036", "1.3552", "0.7047", "0.0278", "Baseline", "Baseline"]
     ]
-    add_custom_table(["TARGET", "RANK", "MODEL", "OOF R²", "MAE", "RMSE", "FOLD R²", "STD (σ)", "GAIN (%)", "STATUS"], t61_data, caption="Table 6.1: Consolidated 5-Fold Cross-Validation Performance Leaderboard", col_widths=[0.60, 0.45, 1.50, 0.55, 0.50, 0.50, 0.58, 0.52, 0.60, 0.70])
+    add_custom_table(["TARGET", "RANK", "MODEL", "OOF R²", "MAE", "RMSE", "FOLD R²", "STD (σ)", "GAIN (%)", "STATUS"], t61_data, caption="Table 6.1: Consolidated 5-Fold Cross-Validation Performance Leaderboard", col_widths=[0.65, 0.50, 1.35, 0.55, 0.48, 0.52, 0.60, 0.58, 0.62, 0.65])
 
     add_body_p("For Coefficient of Friction, XGBoost (Tuned) achieved the highest generalization score with an Out-of-Fold R² of 0.9572, an MAE of 0.0220, and an RMSE of 0.0382, representing a +41.81% improvement over the linear baseline (0.6750).")
     add_body_p("For Specific Wear Rate (log₁₀ kv), CatBoost (Tuned) dominated the benchmark with an Out-of-Fold R² of 0.9819, an MAE of 0.1852, and an RMSE of 0.3362, delivering a +39.10% improvement over linear Ridge (0.7059) and exceptional fold stability (σ = 0.0067).")
@@ -1123,7 +1196,7 @@ def build_phase2_report():
         ["Fold 5", "0.9535", "0.0231", "0.0402", "982", "245", "0.9793", "0.1960", "0.3630", "896", "224"],
         ["Overall OOF", "0.9572", "0.0220", "0.0382", "1,227", "N/A", "0.9819", "0.1852", "0.3362", "1,120", "N/A"]
     ]
-    add_custom_table(["FOLD", "CoF R²", "CoF MAE", "CoF RMSE", "N_train", "N_val", "Wear R²", "Wear MAE", "Wear RMSE", "N_train", "N_val"], t62_data, caption="Table 6.2: Fold-Level Validation Stability and Performance Metrics", col_widths=[0.80, 0.55, 0.55, 0.55, 0.55, 0.45, 0.55, 0.55, 0.55, 0.55, 0.45])
+    add_custom_table(["FOLD", "CoF R²", "CoF MAE", "CoF RMSE", "N_train", "N_val", "Wear R²", "Wear MAE", "Wear RMSE", "N_train", "N_val"], t62_data, caption="Table 6.2: Fold-Level Validation Stability and Performance Metrics", col_widths=[0.70, 0.58, 0.58, 0.58, 0.55, 0.48, 0.60, 0.60, 0.60, 0.65, 0.58])
 
     add_section_heading("6.4 Parity and Residual Diagnostics")
     add_body_p("Figure 6.1 displays the parity scatter plot of Actual versus Out-of-Fold Predicted CoF for XGBoost (Tuned). Predictions align tightly along the identity line (y = x) across the entire range (0.05 to 1.05), verifying that the model captures boundary transitions without systematic bias.")
@@ -1170,7 +1243,7 @@ def build_phase2_report():
         ["9", "graphite_pct", "0.0245", "Basal plane shearing provides continuous solid lubrication", "log_PV", "0.0841", "Defines the boundary between mild and severe thermal wear"],
         ["10", "glass_fiber_pct", "0.0221", "Hard fiber asperities slightly increase friction", "test_type", "0.0712", "Conformal contacts (BoR) stabilize transfer films vs PoD"]
     ]
-    add_custom_table(["RANK", "CoF FEATURE", "MEAN |SHAP|", "CoF PHYSICAL IMPACT", "WEAR FEATURE", "MEAN |SHAP|", "WEAR PHYSICAL IMPACT"], t64_data, caption="Table 6.4: Top 10 Global Features by Tree SHAP (CoF and Specific Wear Rate)", col_widths=[0.50, 1.15, 0.65, 1.42, 1.15, 0.65, 1.43])
+    add_custom_table(["RANK", "CoF FEATURE", "|SHAP|", "CoF PHYSICAL IMPACT", "WEAR FEATURE", "|SHAP|", "WEAR PHYSICAL IMPACT"], t64_data, caption="Table 6.4: Top 10 Global Features by Tree SHAP (CoF and Specific Wear Rate)", col_widths=[0.50, 1.10, 0.55, 1.35, 1.10, 0.55, 1.35])
 
     add_body_p("Figures 6.5 and 6.6 illustrate the Tree SHAP summary beeswarm plots for CoF and Wear Rate, visualizing individual sample distributions across feature values:")
     add_image_figure("tribo_results/cof_shap_beeswarm.png", "Figure 6.5: Global Tree SHAP Beeswarm Feature Impact Summary for CoF", width_inches=5.2)

@@ -134,7 +134,7 @@ def create_report():
             r = p_cap.add_run(f"[{caption_text} — Asset file not found: {img_path}]")
             r.font.bold = True
 
-    def add_custom_table(headers, data, caption=None, col_widths=None):
+    def add_custom_table(headers, data, caption=None, col_widths=None, col_alignments=None):
         if caption:
             p_cap = doc.add_paragraph()
             p_cap.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -145,27 +145,103 @@ def create_report():
             r.font.size = Pt(12.5)
             r.font.bold = True
 
-        table = doc.add_table(rows=len(data) + 1, cols=len(headers))
+        num_cols = len(headers)
+        table = doc.add_table(rows=len(data) + 1, cols=num_cols)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         table.autofit = False
 
+        # Completely remove all table borders and boundaries (no boxes, no lines, plain)
+        tblPr = table._tbl.tblPr
+        tblBorders = parse_xml(r'''
+            <w:tblBorders %s>
+                <w:top w:val="none"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="none"/>
+                <w:right w:val="none"/>
+                <w:insideH w:val="none"/>
+                <w:insideV w:val="none"/>
+            </w:tblBorders>
+        ''' % nsdecls("w"))
+        tblPr.append(tblBorders)
+
+        tblCellMar = parse_xml(r'''
+            <w:tblCellMar %s>
+                <w:top w:w="40" w:type="dxa"/>
+                <w:left w:w="30" w:type="dxa"/>
+                <w:bottom w:w="40" w:type="dxa"/>
+                <w:right w:w="30" w:type="dxa"/>
+            </w:tblCellMar>
+        ''' % nsdecls("w"))
+        tblPr.append(tblCellMar)
+
+        if num_cols >= 9:
+            hdr_font_sz = Pt(8.5)
+            body_font_sz = Pt(8.0)
+            cell_top, cell_bot, cell_l, cell_r = 50, 50, 25, 25
+        elif num_cols >= 6:
+            hdr_font_sz = Pt(9.5)
+            body_font_sz = Pt(9.0)
+            cell_top, cell_bot, cell_l, cell_r = 60, 60, 35, 35
+        else:
+            hdr_font_sz = Pt(11.0)
+            body_font_sz = Pt(10.5)
+            cell_top, cell_bot, cell_l, cell_r = 70, 70, 50, 50
+
+        center_header_keywords = {
+            "NO", "NO.", "SL. NO.", "CHAPTER NO.", "TABLE NO.", "FIGURE NO.", "PAGE NO.",
+            "ID", "RANK", "FOLD", "TARGET", "STATUS", "VALIDATION STATUS",
+            "OOF R²", "R²", "COF R²", "WEAR R²", "MAE", "COF MAE", "WEAR MAE",
+            "RMSE", "COF RMSE", "WEAR RMSE", "N_TRAIN", "N_VAL", "STD (Σ)", "GAIN (%)",
+            "MEAN |SHAP|", "|SHAP|", "FOLD R²", "OPTIMAL IDENTIFIED"
+        }
+
+        alignments = []
+        for idx, title in enumerate(headers):
+            if col_alignments and idx < len(col_alignments):
+                alignments.append(col_alignments[idx])
+            else:
+                clean_title = title.strip().upper()
+                if clean_title in center_header_keywords:
+                    alignments.append(WD_ALIGN_PARAGRAPH.CENTER)
+                else:
+                    col_vals = [str(row[idx]).strip() for row in data if idx < len(row) and row[idx]]
+                    all_short_numbers = len(col_vals) > 0 and all(
+                        len(v) <= 10 and (any(c.isdigit() for c in v) or v.upper() in ["N/A", "-", "NA", "N.A."])
+                        for v in col_vals
+                    )
+                    if all_short_numbers:
+                        alignments.append(WD_ALIGN_PARAGRAPH.CENTER)
+                    else:
+                        alignments.append(WD_ALIGN_PARAGRAPH.LEFT)
+
         # Header Row
         hdr_row = table.rows[0]
-        # Repeat header on new pages
         trPr = hdr_row._tr.get_or_add_trPr()
         trPr.append(parse_xml(f'<w:tblHeader {nsdecls("w")}/>'))
 
         for idx, title in enumerate(headers):
             cell = hdr_row.cells[idx]
-            set_cell_background(cell, "F1F5F9")
-            set_cell_margins(cell, top=120, bottom=120, left=140, right=140)
+            tcPr = cell._tc.get_or_add_tcPr()
+            tcBorders = parse_xml(r'''
+                <w:tcBorders %s>
+                    <w:top w:val="none"/>
+                    <w:left w:val="none"/>
+                    <w:bottom w:val="none"/>
+                    <w:right w:val="none"/>
+                </w:tcBorders>
+            ''' % nsdecls("w"))
+            tcPr.append(tcBorders)
+            tcPr.append(parse_xml(f'<w:vAlign {nsdecls("w")} w:val="top"/>'))
+
+            set_cell_margins(cell, top=cell_top + 15, bottom=cell_bot + 15, left=cell_l, right=cell_r)
             p = cell.paragraphs[0]
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.line_spacing = 1.15
-            p.paragraph_format.space_after = Pt(0)
+            p.alignment = alignments[idx]
+            p.paragraph_format.line_spacing = 1.10
+            p.paragraph_format.space_before = Pt(3)
+            p.paragraph_format.space_after = Pt(3)
             r = p.add_run(title)
             r.font.name = 'Times New Roman'
-            r.font.size = Pt(11.5)
+            r.font.size = hdr_font_sz
             r.font.bold = True
 
         # Data Rows
@@ -173,22 +249,31 @@ def create_report():
             row = table.rows[r_idx + 1]
             trPr_row = row._tr.get_or_add_trPr()
             trPr_row.append(parse_xml(f'<w:cantSplit {nsdecls("w")}/>'))
-            bg_color = "FAFAFA" if r_idx % 2 == 1 else "FFFFFF"
             for c_idx, val in enumerate(row_values):
                 cell = row.cells[c_idx]
-                set_cell_background(cell, bg_color)
-                set_cell_margins(cell, top=100, bottom=100, left=140, right=140)
+                tcPr = cell._tc.get_or_add_tcPr()
+                tcBorders = parse_xml(r'''
+                    <w:tcBorders %s>
+                        <w:top w:val="none"/>
+                        <w:left w:val="none"/>
+                        <w:bottom w:val="none"/>
+                        <w:right w:val="none"/>
+                    </w:tcBorders>
+                ''' % nsdecls("w"))
+                tcPr.append(tcBorders)
+                tcPr.append(parse_xml(f'<w:vAlign {nsdecls("w")} w:val="top"/>'))
+
+                set_cell_margins(cell, top=cell_top, bottom=cell_bot, left=cell_l, right=cell_r)
                 p = cell.paragraphs[0]
-                p.paragraph_format.line_spacing = 1.15
-                p.paragraph_format.space_after = Pt(0)
-                # If numeric or short, center it
-                if len(str(val)) < 15 and any(char.isdigit() for char in str(val)):
-                    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                else:
-                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                r = p.add_run(str(val))
+                p.alignment = alignments[c_idx]
+                p.paragraph_format.line_spacing = 1.10
+                p.paragraph_format.space_before = Pt(1.5)
+                p.paragraph_format.space_after = Pt(1.5)
+
+                val_str = str(val).replace("$MoS_2$", "MoS₂").replace("$kv$", "kv").replace("$Tg$", "Tg")
+                r = p.add_run(val_str)
                 r.font.name = 'Times New Roman'
-                r.font.size = Pt(11)
+                r.font.size = body_font_sz
 
         # Apply Column Widths
         if col_widths and len(col_widths) == len(headers):
@@ -199,7 +284,7 @@ def create_report():
         # Spacing after table
         p_after = doc.add_paragraph()
         p_after.paragraph_format.space_before = Pt(0)
-        p_after.paragraph_format.space_after = Pt(8)
+        p_after.paragraph_format.space_after = Pt(6)
 
     # -------------------------------------------------------------
     # SECTION 1: FRONT MATTER (ROMAN NUMERALS i, ii, iii...)
