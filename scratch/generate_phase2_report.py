@@ -133,7 +133,7 @@ def build_phase2_report():
             r = p_cap.add_run(f"[{caption_text} — Asset file not found: {img_path}]")
             r.font.bold = True
 
-    def add_custom_table(headers, data, caption=None, col_widths=None, add_space_after=True):
+    def add_custom_table(headers, data, caption=None, col_widths=None, add_space_after=True, font_size_body=None, font_size_header=None):
         if caption:
             p_cap = doc.add_paragraph()
             p_cap.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -141,12 +141,51 @@ def build_phase2_report():
             p_cap.paragraph_format.space_after = Pt(4)
             r = p_cap.add_run(caption)
             r.font.name = 'Times New Roman'
-            r.font.size = Pt(12.5)
+            r.font.size = Pt(12.0)
             r.font.bold = True
 
         table = doc.add_table(rows=len(data) + 1, cols=len(headers))
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         table.autofit = False
+
+        num_cols = len(headers)
+        if font_size_header is None:
+            if num_cols >= 9:
+                hdr_font_sz = Pt(8.0)
+            elif num_cols >= 6:
+                hdr_font_sz = Pt(8.5)
+            else:
+                hdr_font_sz = Pt(10.0)
+        else:
+            hdr_font_sz = font_size_header
+
+        if font_size_body is None:
+            if num_cols >= 9:
+                body_font_sz = Pt(7.5)
+            elif num_cols >= 6:
+                body_font_sz = Pt(8.0)
+            else:
+                body_font_sz = Pt(9.5)
+        else:
+            body_font_sz = font_size_body
+
+        # Dynamic cell padding (in dxa)
+        if num_cols >= 9:
+            cell_top, cell_bot, cell_l, cell_r = 50, 50, 30, 30
+        elif num_cols >= 6:
+            cell_top, cell_bot, cell_l, cell_r = 60, 60, 40, 40
+        else:
+            cell_top, cell_bot, cell_l, cell_r = 70, 70, 80, 80
+
+        # Normalize column widths to fit strictly within 6.50 inches printable width
+        if not col_widths or len(col_widths) != num_cols:
+            col_widths = [6.50 / num_cols] * num_cols
+        else:
+            tot = sum(col_widths)
+            if abs(tot - 6.50) > 0.001:
+                scale = 6.50 / tot
+                col_widths = [round(w * scale, 4) for w in col_widths]
+            col_widths[-1] = round(6.50 - sum(col_widths[:-1]), 4)
 
         # Header Row
         hdr_row = table.rows[0]
@@ -156,14 +195,14 @@ def build_phase2_report():
         for idx, title in enumerate(headers):
             cell = hdr_row.cells[idx]
             set_cell_background(cell, "F1F5F9")
-            set_cell_margins(cell, top=120, bottom=120, left=130, right=130)
+            set_cell_margins(cell, top=cell_top + 25, bottom=cell_bot + 25, left=cell_l, right=cell_r)
             p = cell.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.line_spacing = 1.10
             p.paragraph_format.space_after = Pt(0)
             r = p.add_run(title)
             r.font.name = 'Times New Roman'
-            r.font.size = Pt(11.5)
+            r.font.size = hdr_font_sz
             r.font.bold = True
 
         # Data Rows
@@ -175,9 +214,9 @@ def build_phase2_report():
             for c_idx, val in enumerate(row_values):
                 cell = row.cells[c_idx]
                 set_cell_background(cell, bg_color)
-                set_cell_margins(cell, top=90, bottom=90, left=130, right=130)
+                set_cell_margins(cell, top=cell_top, bottom=cell_bot, left=cell_l, right=cell_r)
                 p = cell.paragraphs[0]
-                p.paragraph_format.line_spacing = 1.15
+                p.paragraph_format.line_spacing = 1.10
                 p.paragraph_format.space_after = Pt(0)
                 if len(str(val)) < 15 and any(char.isdigit() for char in str(val)):
                     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -185,12 +224,27 @@ def build_phase2_report():
                     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
                 r = p.add_run(str(val))
                 r.font.name = 'Times New Roman'
-                r.font.size = Pt(10.5)
+                r.font.size = body_font_sz
 
-        if col_widths and len(col_widths) == len(headers):
+        # Apply exact column widths and table width in XML
+        total_dxa = int(sum(col_widths) * 1440)
+        tblPr = table._tbl.tblPr
+        tblW = tblPr.find(qn('w:tblW'))
+        if tblW is not None:
+            tblPr.remove(tblW)
+        tblPr.append(parse_xml(f'<w:tblW {nsdecls("w")} w:w="{total_dxa}" w:type="dxa"/>'))
+
+        for c_idx, w in enumerate(col_widths):
+            table.columns[c_idx].width = Inches(w)
+            w_dxa = int(w * 1440)
             for row in table.rows:
-                for idx, w in enumerate(col_widths):
-                    row.cells[idx].width = Inches(w)
+                cell = row.cells[c_idx]
+                cell.width = Inches(w)
+                tcPr = cell._tc.get_or_add_tcPr()
+                tcW = tcPr.find(qn('w:tcW'))
+                if tcW is not None:
+                    tcPr.remove(tcW)
+                tcPr.append(parse_xml(f'<w:tcW {nsdecls("w")} w:w="{w_dxa}" w:type="dxa"/>'))
 
         if add_space_after:
             p_after = doc.add_paragraph()
@@ -393,45 +447,45 @@ def build_phase2_report():
         ["2", "LITERATURE REVIEW AND RESEARCH GAPS", "7"],
         ["", "2.1 Thematic Synthesis of Literature", "7"],
         ["", "2.2 Summary of Literature (Table 2.1)", "11"],
-        ["", "2.3 Critical Research Gap Analysis", "16"],
-        ["", "2.4 Research Gaps Identified Matrix (Table 2.2)", "17"],
-        ["3", "BACKGROUND AND CONTACT MECHANICS", "19"],
-        ["", "3.1 Polymer Composites and Tribological Behavior", "19"],
-        ["", "3.2 Sliding-Induced Wear Mechanisms and Thermal Contact Transitions", "19"],
-        ["", "3.3 Friction-Induced Flash Heating Formulation (Archard-Ashby Model)", "20"],
-        ["", "3.4 Influence of Multi-Filler Compounding and Synergy Trade-offs", "21"],
-        ["", "3.5 Limitations of Conventional Experimental Testing", "22"],
-        ["4", "PROBLEM STATEMENT AND SYSTEM ANALYSIS", "23"],
-        ["", "4.1 The Problem Statement", "23"],
-        ["", "4.2 Core Computational Challenges", "24"],
-        ["", "4.3 Functional Requirements (FR)", "24"],
-        ["", "4.4 Non-Functional Requirements (NFR)", "25"],
-        ["", "4.5 Data Flow Architecture (DFD Level 0 and Level 1)", "26"],
-        ["", "4.6 Hardware and Software Specifications", "27"],
-        ["5", "METHODOLOGY AND SYSTEM ARCHITECTURE", "29"],
-        ["", "5.1 End-to-End System Architecture", "29"],
-        ["", "5.2 Curated Experimental Literature Corpus", "29"],
-        ["", "5.3 80-Feature Physics-Informed Feature Engineering Taxonomy", "30"],
-        ["", "5.4 Leakage-Free Preprocessing Pipeline", "33"],
-        ["", "5.5 Machine Learning Model Suite", "34"],
-        ["", "5.6 Automated Bayesian Optimization Engine (Optuna)", "34"],
-        ["", "5.7 Detailed Algorithms and Pseudocode", "35"],
-        ["6", "IMPLEMENTATION, RESULTS, AND EMPIRICAL VALIDATION", "38"],
-        ["", "6.1 Experimental Setup and Implementation Environment", "38"],
-        ["", "6.2 Benchmark Performance and Consolidated Leaderboard", "38"],
-        ["", "6.3 5-Fold Stability and Generalization Analysis", "40"],
-        ["", "6.4 Parity and Residual Diagnostics", "40"],
-        ["", "6.5 Empirical Findings Proof Suite (Findings F1 through F10)", "42"],
-        ["", "6.6 Game-Theoretic Model Interpretability (Tree SHAP & PDP)", "45"],
-        ["", "6.7 Interactive Virtual Tribometer Application Architecture", "49"],
-        ["", "6.8 Practical Guidelines for Composite Formulation Design", "50"],
-        ["7", "CONCLUSION AND FUTURE WORK", "51"],
-        ["", "7.1 Summary of Contributions", "51"],
-        ["", "7.2 Technical Limitations and Constraints", "51"],
-        ["", "7.3 Future Research Enhancements (Phase 3 Roadmap)", "52"],
-        ["8", "REFERENCES", "53"]
+        ["", "2.3 Critical Research Gap Analysis", "13"],
+        ["", "2.4 Research Gaps Identified Matrix (Table 2.2)", "14"],
+        ["3", "BACKGROUND AND CONTACT MECHANICS", "16"],
+        ["", "3.1 Polymer Composites and Tribological Behavior", "16"],
+        ["", "3.2 Sliding-Induced Wear Mechanisms and Thermal Contact Transitions", "16"],
+        ["", "3.3 Friction-Induced Flash Heating Formulation (Archard-Ashby Model)", "17"],
+        ["", "3.4 Influence of Multi-Filler Compounding and Synergy Trade-offs", "18"],
+        ["", "3.5 Limitations of Conventional Experimental Testing", "19"],
+        ["4", "PROBLEM STATEMENT AND SYSTEM ANALYSIS", "20"],
+        ["", "4.1 The Problem Statement", "20"],
+        ["", "4.2 Core Computational Challenges", "21"],
+        ["", "4.3 Functional Requirements (FR)", "21"],
+        ["", "4.4 Non-Functional Requirements (NFR)", "22"],
+        ["", "4.5 Data Flow Architecture (DFD Level 0 and Level 1)", "23"],
+        ["", "4.6 Hardware and Software Specifications", "24"],
+        ["5", "METHODOLOGY AND SYSTEM ARCHITECTURE", "26"],
+        ["", "5.1 End-to-End System Architecture", "26"],
+        ["", "5.2 Curated Experimental Literature Corpus", "26"],
+        ["", "5.3 80-Feature Physics-Informed Feature Engineering Taxonomy", "27"],
+        ["", "5.4 Leakage-Free Preprocessing Pipeline", "30"],
+        ["", "5.5 Machine Learning Model Suite", "31"],
+        ["", "5.6 Automated Bayesian Optimization Engine (Optuna)", "31"],
+        ["", "5.7 Detailed Algorithms and Pseudocode", "32"],
+        ["6", "IMPLEMENTATION, RESULTS, AND EMPIRICAL VALIDATION", "34"],
+        ["", "6.1 Experimental Setup and Implementation Environment", "34"],
+        ["", "6.2 Benchmark Performance and Consolidated Leaderboard", "34"],
+        ["", "6.3 5-Fold Stability and Generalization Analysis", "35"],
+        ["", "6.4 Parity and Residual Diagnostics", "36"],
+        ["", "6.5 Empirical Findings Proof Suite (Findings F1 through F10)", "37"],
+        ["", "6.6 Game-Theoretic Model Interpretability (Tree SHAP & PDP)", "40"],
+        ["", "6.7 Interactive Virtual Tribometer Application Architecture", "43"],
+        ["", "6.8 Practical Guidelines for Composite Formulation Design", "44"],
+        ["7", "CONCLUSION AND FUTURE WORK", "45"],
+        ["", "7.1 Summary of Contributions", "45"],
+        ["", "7.2 Technical Limitations and Constraints", "45"],
+        ["", "7.3 Future Research Enhancements (Phase 3 Roadmap)", "46"],
+        ["8", "REFERENCES", "47"]
     ]
-    add_custom_table(["CHAPTER NO.", "TITLE", "PAGE NO."], toc_data, col_widths=[1.3, 4.4, 1.0], add_space_after=False)
+    add_custom_table(["CHAPTER NO.", "TITLE", "PAGE NO."], toc_data, col_widths=[1.3, 4.4, 0.8], add_space_after=False)
 
     # 7. LIST OF TABLES (Page x)
     doc.add_page_break()
@@ -445,22 +499,22 @@ def build_phase2_report():
 
     lot_data = [
         ["2.1", "Comprehensive Summary of Foundational Literature (2024–2025)", "11"],
-        ["2.2", "Systematic Mapping of Identified Research Gaps and Phase 2 Solutions", "17"],
-        ["5.1", "Distribution of Curated Literature Experimental Records", "30"],
-        ["5.2", "Polymer Matrix & Filler Physics-Informed Features (P1 to P24)", "31"],
-        ["5.3", "Operational Kinematics and Contact Flash Rise Features (O1 to O26)", "31"],
-        ["5.4", "Manufacturing Process and Specimen Geometry Features (M1 to M15)", "32"],
-        ["5.5", "Non-linear Polynomial and Interaction Features (I1 to I15)", "32"],
-        ["5.6", "Comprehensive 80-Feature Input Dimension Taxonomy", "33"],
-        ["5.7", "Algorithm-Specific Leakage-Free Preprocessing Protocols", "34"],
-        ["5.8", "Optuna Bayesian Optimization Search Space Specifications", "35"],
-        ["6.1", "Consolidated 5-Fold Cross-Validation Performance Leaderboard", "38"],
-        ["6.2", "Fold-Level Validation Stability and Performance Metrics", "40"],
-        ["6.3", "Empirical Findings Proof Suite (Findings F1–F10 Summary)", "42"],
-        ["6.4", "Top 10 Global Tribological Drivers Identified via Tree SHAP", "45"],
-        ["7.1", "Technical Limitations and Real-World Operational Boundaries", "51"]
+        ["2.2", "Systematic Mapping of Identified Research Gaps and Phase 2 Solutions", "14"],
+        ["5.1", "Distribution of Curated Literature Experimental Records", "27"],
+        ["5.2", "Polymer Matrix & Filler Physics-Informed Features (P1 to P24)", "28"],
+        ["5.3", "Operational Kinematics and Contact Flash Rise Features (O1 to O26)", "28"],
+        ["5.4", "Manufacturing Process and Specimen Geometry Features (M1 to M15)", "29"],
+        ["5.5", "Non-linear Polynomial and Interaction Features (I1 to I15)", "29"],
+        ["5.6", "Comprehensive 80-Feature Input Dimension Taxonomy", "30"],
+        ["5.7", "Algorithm-Specific Leakage-Free Preprocessing Protocols", "31"],
+        ["5.8", "Optuna Bayesian Optimization Search Space Specifications", "31"],
+        ["6.1", "Consolidated 5-Fold Cross-Validation Performance Leaderboard", "34"],
+        ["6.2", "Fold-Level Validation Stability and Performance Metrics", "35"],
+        ["6.3", "Empirical Findings Proof Suite (Findings F1–F10 Summary)", "37"],
+        ["6.4", "Top 10 Global Tribological Drivers Identified via Tree SHAP", "40"],
+        ["7.1", "Technical Limitations and Real-World Operational Boundaries", "45"]
     ]
-    add_custom_table(["TABLE NO.", "TITLE", "PAGE NO."], lot_data, col_widths=[1.2, 4.6, 0.9], add_space_after=False)
+    add_custom_table(["TABLE NO.", "TITLE", "PAGE NO."], lot_data, col_widths=[1.2, 4.5, 0.8], add_space_after=False)
 
     # 8. LIST OF FIGURES (Page xi)
     doc.add_page_break()
@@ -473,20 +527,20 @@ def build_phase2_report():
     r.font.bold = True
 
     lof_data = [
-        ["4.1", "Data Flow Diagram Level 0 Context Architecture", "26"],
-        ["4.2", "Data Flow Diagram Level 1 Feature & Training Subsystems", "26"],
-        ["5.1", "End-to-End System Architecture: Mining, Features, and UI", "29"],
-        ["5.2", "80-Feature Physics-Informed Pipeline and Normalization Flow", "33"],
-        ["6.1", "CoF Model Parity Plot: Actual vs 5-Fold OOF Predicted (XGBoost)", "40"],
-        ["6.2", "Wear Model Parity Plot: Actual vs OOF Predicted log₁₀ kv (CatBoost)", "41"],
-        ["6.3", "Finding 8 — Solid Lubricant to Fiber Reinforcement Pareto Window", "45"],
-        ["6.4", "Finding 5 — Orthogonality Scatter Plot of CoF versus Wear Rate", "44"],
-        ["6.5", "Global Tree SHAP Beeswarm Feature Impact Summary for CoF", "47"],
-        ["6.6", "Global Tree SHAP Beeswarm Feature Impact Summary for Wear Rate", "48"],
-        ["6.7", "2D Partial Dependence Interaction Surface (GF × MoS₂ Synergy)", "48"],
-        ["6.8", "Streamlit Virtual Tribometer Graphical User Interface Architecture", "50"]
+        ["4.1", "Data Flow Diagram Level 0 Context Architecture", "23"],
+        ["4.2", "Data Flow Diagram Level 1 Feature & Training Subsystems", "24"],
+        ["5.1", "End-to-End System Architecture: Mining, Features, and UI", "26"],
+        ["5.2", "80-Feature Physics-Informed Pipeline and Normalization Flow", "30"],
+        ["6.1", "CoF Model Parity Plot: Actual vs 5-Fold OOF Predicted (XGBoost)", "36"],
+        ["6.2", "Wear Model Parity Plot: Actual vs OOF Predicted log₁₀ kv (CatBoost)", "37"],
+        ["6.3", "Finding 5 — Orthogonality Scatter Plot of CoF versus Wear Rate", "39"],
+        ["6.4", "Finding 8 — Solid Lubricant to Fiber Reinforcement Pareto Window", "40"],
+        ["6.5", "Global Tree SHAP Beeswarm Feature Impact Summary for CoF", "42"],
+        ["6.6", "Global Tree SHAP Beeswarm Feature Impact Summary for Wear Rate", "42"],
+        ["6.7", "2D Partial Dependence Interaction Surface (GF × MoS₂ Synergy)", "43"],
+        ["6.8", "Streamlit Virtual Tribometer Graphical User Interface Architecture", "44"]
     ]
-    add_custom_table(["FIGURE NO.", "TITLE", "PAGE NO."], lof_data, col_widths=[1.2, 4.6, 0.9], add_space_after=False)
+    add_custom_table(["FIGURE NO.", "TITLE", "PAGE NO."], lof_data, col_widths=[1.2, 4.5, 0.8], add_space_after=False)
 
     # 9. LIST OF SYMBOLS AND ABBREVIATIONS (Page xii)
     doc.add_page_break()
@@ -522,7 +576,7 @@ def build_phase2_report():
         ["XGBoost", "Extreme Gradient Boosting Decision Trees"],
         ["CatBoost", "Categorical Gradient Boosting (Oblivious Trees)"]
     ]
-    add_custom_table(["ABBREVIATION", "DESCRIPTION"], abbr_data, col_widths=[2.0, 4.7], add_space_after=False)
+    add_custom_table(["ABBREVIATION", "DESCRIPTION"], abbr_data, col_widths=[1.8, 4.7], add_space_after=False)
 
     # -------------------------------------------------------------
     # SECTION 1: MAIN MATTER (ARABIC NUMERALS 1, 2, 3...)
@@ -613,7 +667,7 @@ def build_phase2_report():
     # Insert Table 2.1
     t21_headers = t21_raw[0]
     t21_rows = t21_raw[1:]
-    add_custom_table(t21_headers, t21_rows, caption="Table 2.1: Comprehensive Summary of Foundational Literature (2024–2025)", col_widths=[0.5, 1.2, 1.6, 1.1, 1.2, 1.8])
+    add_custom_table(t21_headers, t21_rows, caption="Table 2.1: Comprehensive Summary of Foundational Literature (2024–2025)", col_widths=[0.45, 1.15, 1.40, 0.90, 1.10, 1.50])
 
     add_section_heading("2.3 Critical Research Gap Analysis")
     add_body_p("A rigorous, systematic analysis of the existing body of literature reveals four profound scientific and computational limitations that current experimental and modeling paradigms fail to resolve:")
@@ -628,7 +682,7 @@ def build_phase2_report():
     # Insert Table 2.2
     t22_headers = t22_raw[0]
     t22_rows = t22_raw[1:]
-    add_custom_table(t22_headers, t22_rows, caption="Table 2.2: Systematic Mapping of Identified Research Gaps and Phase 2 Solutions", col_widths=[1.5, 2.5, 3.4])
+    add_custom_table(t22_headers, t22_rows, caption="Table 2.2: Systematic Mapping of Identified Research Gaps and Phase 2 Solutions", col_widths=[1.50, 2.20, 2.80])
 
     # =============================================================
     # CHAPTER 3: BACKGROUND & CONTACT MECHANICS
@@ -750,7 +804,7 @@ def build_phase2_report():
         ["main_filler_count, hybrid_composite", "Filler diversity count indicators", "Distinguishes single, binary, and ternary systems"],
         ["gf_pct_sq, graphite_pct_sq, mos2_pct_sq", "Quadratic polynomial terms", "Models non-linear concentration saturation"]
     ]
-    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t51_data, caption="Table 5.1: Chemical Composition and Filler Stoichiometry Predictor Group", col_widths=[2.2, 2.5, 2.0])
+    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t51_data, caption="Table 5.1: Chemical Composition and Filler Stoichiometry Predictor Group", col_widths=[2.10, 2.40, 2.00])
 
     # Table 5.2: Kinematic Predictors
     t52_data = [
@@ -762,7 +816,7 @@ def build_phase2_report():
         ["log_load, log_speed, log_distance, log_PV", "Logarithmic transforms log(1 + x)", "Linearizes skewed exponential kinematic ranges"],
         ["humidity_avail, temp_avail", "Reporting availability flags", "Controls for unrecorded ambient room parameters"]
     ]
-    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t52_data, caption="Table 5.2: Kinematic and Decoupled Operating Conditions Predictor Group", col_widths=[2.2, 2.5, 2.0])
+    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t52_data, caption="Table 5.2: Kinematic and Decoupled Operating Conditions Predictor Group", col_widths=[2.10, 2.40, 2.00])
 
     # Table 5.3: Flash Heating
     t53_data = [
@@ -771,7 +825,7 @@ def build_phase2_report():
         ["exceeds_Tg_50C", "Binary flag: T_contact > 50°C (F9)", "Detects polymer glass transition softening regime"],
         ["thermal_margin_Tm", "Tm(composite) - T_contact margin", "Safety margin against melting (220°C PA6 vs 260°C PA66)"]
     ]
-    add_custom_table(["FEATURE NAMES", "FORMULATION / DESCRIPTION", "PHYSICAL RATIONALE"], t53_data, caption="Table 5.3: Archard-Ashby Interfacial Flash Contact Heating Formulation", col_widths=[2.2, 2.5, 2.0])
+    add_custom_table(["FEATURE NAMES", "FORMULATION / DESCRIPTION", "PHYSICAL RATIONALE"], t53_data, caption="Table 5.3: Archard-Ashby Interfacial Flash Contact Heating Formulation", col_widths=[2.10, 2.40, 2.00])
 
     # Table 5.4: Synergistic Interaction Terms
     t54_data = [
@@ -784,7 +838,7 @@ def build_phase2_report():
         ["speed_temp_interaction, load_temp_int", "Kinematic conditions · Temperature", "Thermal-mechanical degradation coupling"],
         ["gf_humidity_interaction, speed_humidity_int", "Composition / Kinematics · RH", "Moisture-induced polyamide plasticization effects"]
     ]
-    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t54_data, caption="Table 5.4: Cross-Body and Synergistic Filler-Kinematic Interaction Predictors", col_widths=[2.3, 2.4, 2.0])
+    add_custom_table(["FEATURE NAMES", "DESCRIPTION", "PHYSICAL RATIONALE"], t54_data, caption="Table 5.4: Cross-Body and Synergistic Filler-Kinematic Interaction Predictors", col_widths=[2.10, 2.40, 2.00])
 
     # Table 5.5: Rig Geometry & Environment
     t55_data = [
@@ -793,7 +847,7 @@ def build_phase2_report():
         ["environment", "Sliding ambient lubrication medium", "Dry sliding, distilled water, salt water, oil"],
         ["fabrication", "Polymer composite manufacturing method", "Injection molding, compression molding, additive 3D"]
     ]
-    add_custom_table(["FEATURE NAMES", "CATEGORIES / SPECIFICATIONS", "PHYSICAL RATIONALE"], t55_data, caption="Table 5.5: Experimental Rig Geometry and Environmental Specifications", col_widths=[2.2, 2.5, 2.0])
+    add_custom_table(["FEATURE NAMES", "CATEGORIES / SPECIFICATIONS", "PHYSICAL RATIONALE"], t55_data, caption="Table 5.5: Experimental Rig Geometry and Environmental Specifications", col_widths=[2.10, 2.40, 2.00])
 
     add_image_figure("dfd_level1_tribology.png", "Figure 5.2: 80-Feature Physics-Informed Pipeline and Normalization Flow", width_inches=6.0)
 
@@ -806,7 +860,7 @@ def build_phase2_report():
         ["Scaling Pipeline", "StandardScaler()", "Applied exclusively to linear Ridge and kernel SVR pipelines"],
         ["Tree Regressors", "Raw Unscaled Preprocessed Array", "Gradient boosters receive unscaled continuous and one-hot features"]
     ]
-    add_custom_table(["PIPELINE STEP", "OPERATIONAL TRANSFORMER", "TECHNICAL DETAILS"], t56_data, caption="Table 5.6: Data Preprocessing Pipeline Specifications and Transformers", col_widths=[2.0, 2.5, 2.2])
+    add_custom_table(["PIPELINE STEP", "OPERATIONAL TRANSFORMER", "TECHNICAL DETAILS"], t56_data, caption="Table 5.6: Data Preprocessing Pipeline Specifications and Transformers", col_widths=[1.80, 2.40, 2.30])
 
     add_section_heading("5.5 Machine Learning Model Suite")
     add_body_p("Our benchmark evaluates 8 diverse machine learning regression architectures across identical 5-fold cross-validation splits (Table 5.7):")
@@ -821,7 +875,7 @@ def build_phase2_report():
         ["LightGBM", "Leaf-wise gradient boosted trees", "n_estimators=600, num_leaves=31, lr=0.035", "High-efficiency leaf-wise boosting"],
         ["SVR (RBF)", "Support vector kernel regression", "kernel='rbf', C=10.0, epsilon=0.03", "Non-linear kernel baseline"]
     ]
-    add_custom_table(["MODEL", "ARCHITECTURE TYPE", "DEFAULT HYPERPARAMETERS", "ROLE IN STUDY"], t57_data, caption="Table 5.7: Benchmarked Machine Learning Regressor Architectures", col_widths=[1.5, 1.8, 2.0, 1.4])
+    add_custom_table(["MODEL", "ARCHITECTURE TYPE", "DEFAULT HYPERPARAMETERS", "ROLE IN STUDY"], t57_data, caption="Table 5.7: Benchmarked Machine Learning Regressor Architectures", col_widths=[1.40, 1.70, 2.00, 1.40])
 
     add_section_heading("5.6 Automated Bayesian Optimization Engine (Optuna)")
     add_body_p("To maximize predictive accuracy without manual tuning bias, the top-performing architectures were fine-tuned using Optuna's Tree-structured Parzen Estimator (TPE) algorithm across 35 trials per target (Table 5.8):")
@@ -837,7 +891,7 @@ def build_phase2_report():
         ["CatBoost (Wear)", "depth", "Integer [4, 8]", "6"],
         ["CatBoost (Wear)", "l2_leaf_reg", "Float [1.0, 10.0]", "5.0"]
     ]
-    add_custom_table(["TUNING TARGET", "HYPERPARAMETER", "BAYESIAN SEARCH BOUNDS", "OPTIMAL IDENTIFIED"], t58_data, caption="Table 5.8: Optuna Bayesian Optimization Search Space Specifications", col_widths=[1.8, 1.8, 2.0, 1.1])
+    add_custom_table(["TUNING TARGET", "HYPERPARAMETER", "BAYESIAN SEARCH BOUNDS", "OPTIMAL IDENTIFIED"], t58_data, caption="Table 5.8: Optuna Bayesian Optimization Search Space Specifications", col_widths=[1.60, 1.80, 2.00, 1.10])
 
     add_section_heading("5.7 Detailed Algorithms and Pseudocode")
     add_body_p("Algorithm 5.1 outlines the end-to-end 5-fold cross-validation and Bayesian tuning workflow, while Algorithm 5.2 defines the real-time Virtual Tribometer inference routine with physical guardrails:")
@@ -903,7 +957,7 @@ def build_phase2_report():
         ["Wear", "8", "SVR (RBF)", "0.8947", "0.3474", "0.8110", "0.8955", "0.0453", "+26.75%", "Benchmark"],
         ["Wear", "9", "Linear Ridge", "0.7059", "1.0036", "1.3552", "0.7047", "0.0278", "Baseline", "Baseline"]
     ]
-    add_custom_table(["TARGET", "RANK", "MODEL", "OOF R²", "MAE", "RMSE", "FOLD MEAN", "FOLD STD", "GAIN VS RIDGE", "STATUS"], t61_data, caption="Table 6.1: Consolidated 5-Fold Cross-Validation Performance Leaderboard", col_widths=[0.8, 0.6, 1.8, 0.8, 0.7, 0.7, 0.8, 0.8, 0.9, 0.8])
+    add_custom_table(["TARGET", "RANK", "MODEL", "OOF R²", "MAE", "RMSE", "FOLD R²", "STD (σ)", "GAIN (%)", "STATUS"], t61_data, caption="Table 6.1: Consolidated 5-Fold Cross-Validation Performance Leaderboard", col_widths=[0.60, 0.45, 1.50, 0.55, 0.50, 0.50, 0.58, 0.52, 0.60, 0.70])
 
     add_body_p("For Coefficient of Friction, XGBoost (Tuned) achieved the highest generalization score with an Out-of-Fold R² of 0.9572, an MAE of 0.0220, and an RMSE of 0.0382, representing a +41.81% improvement over the linear baseline (0.6750).")
     add_body_p("For Specific Wear Rate (log₁₀ kv), CatBoost (Tuned) dominated the benchmark with an Out-of-Fold R² of 0.9819, an MAE of 0.1852, and an RMSE of 0.3362, delivering a +39.10% improvement over linear Ridge (0.7059) and exceptional fold stability (σ = 0.0067).")
@@ -919,7 +973,7 @@ def build_phase2_report():
         ["Fold 5", "0.9535", "0.0231", "0.0402", "982", "245", "0.9793", "0.1960", "0.3630", "896", "224"],
         ["Overall OOF", "0.9572", "0.0220", "0.0382", "1,227", "N/A", "0.9819", "0.1852", "0.3362", "1,120", "N/A"]
     ]
-    add_custom_table(["FOLD", "CoF R²", "CoF MAE", "CoF RMSE", "N_train", "N_val", "Wear R²", "Wear MAE", "Wear RMSE", "N_train", "N_val"], t62_data, caption="Table 6.2: Fold-Level Validation Stability and Performance Metrics", col_widths=[1.0, 0.7, 0.7, 0.7, 0.6, 0.5, 0.7, 0.7, 0.7, 0.6, 0.5])
+    add_custom_table(["FOLD", "CoF R²", "CoF MAE", "CoF RMSE", "N_train", "N_val", "Wear R²", "Wear MAE", "Wear RMSE", "N_train", "N_val"], t62_data, caption="Table 6.2: Fold-Level Validation Stability and Performance Metrics", col_widths=[0.80, 0.55, 0.55, 0.55, 0.55, 0.45, 0.55, 0.55, 0.55, 0.55, 0.45])
 
     add_section_heading("6.4 Parity and Residual Diagnostics")
     add_body_p("Figure 6.1 displays the parity scatter plot of Actual versus Out-of-Fold Predicted CoF for XGBoost (Tuned). Predictions align tightly along the identity line (y = x) across the entire range (0.05 to 1.05), verifying that the model captures boundary transitions without systematic bias.")
@@ -943,30 +997,30 @@ def build_phase2_report():
         ["F9", "Flash heating exceeding Tg triggers wear escalation", "Archard-Ashby flash model rise exceeding Tg (50°C)", "Stick-slip softening transition", "4.8× median wear escalation", "Confirmed"],
         ["F10", "PA66 provides superior high-speed wear resilience", "Matrix sliding speed threshold at v > 0.5 m/s (Tm 260° vs 220°C)", "Comparable steady friction", "PA66 wear 62% lower at v > 0.5 m/s", "Confirmed"]
     ]
-    add_custom_table(["ID", "SCIENTIFIC FINDING", "COMPUTATIONAL EVIDENCE", "CoF EFFECT", "WEAR EFFECT", "VALIDATION STATUS"], t63_data, caption="Table 6.3: Empirical Findings Proof Suite (Findings F1–F10 Validation Summary)", col_widths=[0.5, 1.8, 1.8, 1.2, 1.2, 1.0])
+    add_custom_table(["ID", "SCIENTIFIC FINDING", "COMPUTATIONAL EVIDENCE", "CoF EFFECT", "WEAR EFFECT", "VALIDATION STATUS"], t63_data, caption="Table 6.3: Empirical Findings Proof Suite (Findings F1–F10 Validation Summary)", col_widths=[0.40, 1.60, 1.60, 1.05, 1.05, 0.80])
 
-    add_body_p("Proof of Finding 5 (Target Orthogonality): Figure 6.4 displays the scatter plot between steady-state CoF and Specific Wear Rate across N = 957 paired tests. The near-zero Pearson correlation coefficient (r = 0.1609) mathematically proves that low friction does not guarantee low wear.")
-    add_image_figure("tribo_results/finding5_cof_vs_wear_scatter.png", "Figure 6.4: Finding 5 — Orthogonality Scatter Plot of CoF versus Specific Wear Rate", width_inches=4.8)
+    add_body_p("Proof of Finding 5 (Target Orthogonality): Figure 6.3 displays the scatter plot between steady-state CoF and Specific Wear Rate across N = 957 paired tests. The near-zero Pearson correlation coefficient (r = 0.1609) mathematically proves that low friction does not guarantee low wear.")
+    add_image_figure("tribo_results/finding5_cof_vs_wear_scatter.png", "Figure 6.3: Finding 5 — Orthogonality Scatter Plot of CoF versus Specific Wear Rate", width_inches=4.8)
 
-    add_body_p("Proof of Finding 8 (Pareto Frontier Window): Figure 6.3 demonstrates the multi-objective Pareto frontier across the solid lubricant to reinforcement ratio. In the sub-optimal regime (< 0.25), insufficient solid lubricant causes high friction (μ ≈ 0.28). In the over-lubricated regime (> 0.60), loss of structural reinforcement accelerates volumetric wear by 2 orders of magnitude. The optimal Pareto window lies between 0.25 and 0.60.")
-    add_image_figure("tribo_results/finding8_pareto_frontier.png", "Figure 6.3: Finding 8 — Solid Lubricant to Fiber Reinforcement Pareto Window", width_inches=5.8)
+    add_body_p("Proof of Finding 8 (Pareto Frontier Window): Figure 6.4 demonstrates the multi-objective Pareto frontier across the solid lubricant to reinforcement ratio. In the sub-optimal regime (< 0.25), insufficient solid lubricant causes high friction (μ ≈ 0.28). In the over-lubricated regime (> 0.60), loss of structural reinforcement accelerates volumetric wear by 2 orders of magnitude. The optimal Pareto window lies between 0.25 and 0.60.")
+    add_image_figure("tribo_results/finding8_pareto_frontier.png", "Figure 6.4: Finding 8 — Solid Lubricant to Fiber Reinforcement Pareto Window", width_inches=5.8)
 
     add_section_heading("6.6 Game-Theoretic Model Interpretability (Tree SHAP & PDP)")
     add_body_p("Table 6.4 summarizes the top 10 global drivers identified via Tree SHAP for both target models:")
 
     t64_data = [
         ["1", "environment", "0.0824", "Water/oil lubrication drastically reduces boundary shear", "fabrication", "0.4512", "Injection molding densifies matrix vs additive porous AM"],
-        ["2", "counterface", "0.0763", "Ceramic alumina elevates friction vs polished bearing steel", "other_reinforcement_count", "0.3845", "Reinforcing fibers prevent severe subsurface crack propagation"],
+        ["2", "counterface", "0.0763", "Ceramic alumina elevates friction vs polished bearing steel", "other_reinf_count", "0.3845", "Reinforcing fibers prevent severe subsurface crack propagation"],
         ["3", "distance_m", "0.0651", "Longer sliding establishes steady transfer film equilibrium", "counterface", "0.2980", "Rough counterface topography induces micro-ploughing"],
         ["4", "pa6_pct", "0.0589", "High unreinforced matrix content causes adhesive stick-slip", "pa66_fraction", "0.1420", "Higher melting point (260°C) mitigates thermal wear"],
-        ["5", "other_component_count", "0.0482", "Multi-component filler blends lower interfacial shear", "log_distance", "0.1287", "Differentiates initial running-in wear from steady-state wear"],
+        ["5", "other_filler_count", "0.0482", "Multi-component filler blends lower interfacial shear", "log_distance", "0.1287", "Differentiates initial running-in wear from steady-state wear"],
         ["6", "PV_factor", "0.0415", "High contact pressure elevates flash contact heating", "log_speed", "0.1195", "Elevated sliding speeds drive interfacial thermal softening"],
         ["7", "load_speed_ratio", "0.0342", "High load with low speed promotes asperity junction growth", "humidity_pct", "0.0984", "Moisture absorption plasticizes polyamide matrix"],
         ["8", "ptfe_pct", "0.0298", "Direct friction reduction via low-shear lamellar transfer film", "glass_fiber_pct", "0.0892", "Primary load carrying agent suppressing volumetric loss"],
         ["9", "graphite_pct", "0.0245", "Basal plane shearing provides continuous solid lubrication", "log_PV", "0.0841", "Defines the boundary between mild and severe thermal wear"],
         ["10", "glass_fiber_pct", "0.0221", "Hard fiber asperities slightly increase friction", "test_type", "0.0712", "Conformal contacts (BoR) stabilize transfer films vs PoD"]
     ]
-    add_custom_table(["RANK", "CoF FEATURE", "MEAN |SHAP|", "CoF PHYSICAL IMPACT", "WEAR FEATURE", "MEAN |SHAP|", "WEAR PHYSICAL IMPACT"], t64_data, caption="Table 6.4: Top 10 Global Features by Tree SHAP (CoF and Specific Wear Rate)", col_widths=[0.6, 1.4, 0.8, 2.0, 1.4, 0.8, 2.0])
+    add_custom_table(["RANK", "CoF FEATURE", "MEAN |SHAP|", "CoF PHYSICAL IMPACT", "WEAR FEATURE", "MEAN |SHAP|", "WEAR PHYSICAL IMPACT"], t64_data, caption="Table 6.4: Top 10 Global Features by Tree SHAP (CoF and Specific Wear Rate)", col_widths=[0.50, 1.15, 0.65, 1.42, 1.15, 0.65, 1.43])
 
     add_body_p("Figures 6.5 and 6.6 illustrate the Tree SHAP summary beeswarm plots for CoF and Wear Rate, visualizing individual sample distributions across feature values:")
     add_image_figure("tribo_results/cof_shap_beeswarm.png", "Figure 6.5: Global Tree SHAP Beeswarm Feature Impact Summary for CoF", width_inches=5.2)
@@ -1011,7 +1065,7 @@ def build_phase2_report():
         ["Fiber Aspect Ratio", "Short fibers are assumed standard length (200–400 μm); fiber orientation angle is not parameterized."],
         ["Steady-State Focus", "Models predict steady-state CoF and wear; transient running-in spikes are not dynamically time-resolved."]
     ]
-    add_custom_table(["TECHNICAL CONSTRAINT", "DESCRIPTION AND IMPACT"], t71_data, caption="Table 7.1: Technical Constraints and Limitations of the Tribology AI Framework", col_widths=[2.4, 4.5])
+    add_custom_table(["TECHNICAL CONSTRAINT", "DESCRIPTION AND IMPACT"], t71_data, caption="Table 7.1: Technical Constraints and Limitations of the Tribology AI Framework", col_widths=[2.20, 4.30])
 
     add_section_heading("7.3 Future Research Enhancements (Phase 3 Roadmap)")
     add_body_p("Future extensions planned for Phase 3 include: (1) Physics-Informed Neural Networks (PINNs) embedding partial differential heat equations directly into backpropagation loss; (2) Transfer learning to other engineering polymer families such as polyetheretherketone (PEEK) and polyoxymethylene (POM); and (3) Active learning algorithms coupled to automated robotic compounding to guide laboratory synthesis toward unexplored Pareto-optimal formulations.")

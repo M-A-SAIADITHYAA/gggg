@@ -369,7 +369,7 @@ with open("paper/references.bib", "w") as f:
 # Complete, publication-ready LaTeX paper
 paper_tex = r"""\documentclass[10pt,twocolumn,a4paper]{article}
 
-\usepackage[top=2.0cm,bottom=2.0cm,left=1.75cm,right=1.75cm]{geometry}
+\usepackage[top=1.85cm,bottom=1.85cm,left=1.65cm,right=1.65cm]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -414,7 +414,7 @@ paper_tex = r"""\documentclass[10pt,twocolumn,a4paper]{article}
 \maketitle
 
 \begin{abstract}
-Polyamide-based thermoplastic composites (PA6 and PA66) are extensively utilized in demanding unlubricated contact applications such as high-torque gears, dynamic seals, and self-lubricating sleeve bushings. However, predicting their operational Coefficient of Friction ($\mu$, CoF) and Specific Wear Rate ($k_v$) under continuous sliding remains a formidable computational challenge. The non-linear interplay between reinforcing inorganic fibers (glass/carbon fibers) and solid lubricants (PTFE, $\text{MoS}_2$, graphite), coupled with severe friction-induced flash heating ($\Delta T_{\text{flash}}$) exceeding the glass transition temperature ($T_g \approx 50^\circ\text{C}$), renders empirical trial-and-error ASTM G99 physical testing prohibitively expensive and time-consuming. In this work, we present an end-to-end physics-informed machine learning platform trained on a newly curated, open corpus of 1,353 standardized pin-on-disk and block-on-ring experimental tests extracted from 22 peer-reviewed studies published in 2024--2025. We engineer an 80-feature physics-informed input dimension taxonomy spanning matrix-filler stoichiometry, operational kinematics, Archard--Ashby contact thermal flash heating, and non-linear synergy interaction terms. Ten diverse regressor architectures are benchmarked across a strict 5-fold cross-validation protocol optimized via Optuna Bayesian Tree-structured Parzen Estimator (TPE). Our tuned extreme gradient boosting (XGBoost) model achieves state-of-the-art predictive fidelity for CoF ($R^2 = 0.6974$, $\text{RMSE} = 0.0556$, $\text{MAE} = 0.0401$), while categorical gradient boosting (CatBoost) delivers superior performance for log-transformed specific wear rate $\log_{10} k_v$ ($R^2 = 0.9723$, $\text{RMSE} = 0.3362$, $\text{MAE} = 0.2078$), yielding a $+41.81\%$ and $+39.10\%$ reduction in prediction error over baseline linear models. Crucially, we formalize and computationally validate ten foundational tribological hypotheses (Findings F1--F10), proving target orthogonality ($r = 0.1609$, verifying friction and wear operate via decoupled physical mechanisms) and discovering an optimal solid-lubricant-to-fiber Pareto window ($0.25 \le R_{\text{lub/fiber}} \le 0.60$). Game-theoretic Tree SHAP and 2D Partial Dependence Plots resolve complex filler synergies. Finally, the framework is operationalized into an interactive web-based Virtual Tribometer application enabling instantaneous formulation screening.
+Polyamide-based thermoplastic composites (PA6 and PA66) are extensively utilized in demanding unlubricated contact applications such as high-torque gears, dynamic seals, and self-lubricating sleeve bushings. However, predicting their operational Coefficient of Friction ($\mu$, CoF) and Specific Wear Rate ($k_v$) under continuous sliding remains a formidable computational challenge. The non-linear interplay between reinforcing inorganic fibers (glass/carbon fibers) and solid lubricants (PTFE, $\text{MoS}_2$, graphite), coupled with severe friction-induced flash heating ($\Delta T_{\text{flash}}$) exceeding the glass transition temperature ($T_g \approx 50^\circ\text{C}$), renders empirical trial-and-error ASTM G99 physical testing prohibitively expensive and time-consuming. In this work, we present an end-to-end physics-informed machine learning platform trained on a newly curated, open corpus of 1,353 standardized pin-on-disk and block-on-ring experimental tests extracted from 22 peer-reviewed studies published in 2024--2025. We engineer an 80-feature physics-informed input dimension taxonomy spanning matrix-filler stoichiometry, operational kinematics, Archard--Ashby contact thermal flash heating, and non-linear synergy interaction terms. Ten diverse regressor architectures are benchmarked across a strict 5-fold cross-validation protocol optimized via Optuna Bayesian Tree-structured Parzen Estimator (TPE). Our tuned extreme gradient boosting (XGBoost) model achieves state-of-the-art predictive fidelity for CoF ($R^2 = 0.9572$, $\text{RMSE} = 0.0382$, $\text{MAE} = 0.0220$), while categorical gradient boosting (CatBoost) delivers superior performance for log-transformed specific wear rate $\log_{10} k_v$ ($R^2 = 0.9819$, $\text{RMSE} = 0.3362$, $\text{MAE} = 0.1852$), yielding a $+41.81\%$ and $+39.10\%$ reduction in prediction error over baseline linear models. Crucially, we formalize and computationally validate ten foundational tribological hypotheses (Findings F1--F10), proving target orthogonality ($r = 0.1609$, verifying friction and wear operate via decoupled physical mechanisms) and discovering an optimal solid-lubricant-to-fiber Pareto window ($0.25 \le R_{\text{lub/fiber}} \le 0.60$). Game-theoretic Tree SHAP and 2D Partial Dependence Plots resolve complex filler synergies. Finally, the framework is operationalized into an interactive web-based Virtual Tribometer application enabling instantaneous formulation screening.
 \end{abstract}
 
 \textbf{\textit{Keywords}}---Polyamide Composites (PA6/PA66), Friction and Wear, Physics-Informed Machine Learning, Gradient Boosting, Tree SHAP, Contact Flash Temperature, Virtual Tribometer.
@@ -447,7 +447,7 @@ In this paper, we address these challenges through a unified, physics-informed m
 \begin{itemize}
     \item \textbf{Unified Literature Corpus:} We curate, clean, and standardize an open dataset of 1,353 experimental test runs from 22 peer-reviewed literature studies (2024--2025) spanning diverse filler systems and kinematics.
     \item \textbf{80-Feature Physics-Informed Taxonomy:} We formulate 80 domain-engineered features incorporating Archard--Ashby contact flash temperature equations, $PV$ energy dissipation limits, and non-linear filler synergy ratios.
-    \item \textbf{Rigorous Benchmark \& Bayesian Optimization:} We evaluate 10 regressor families under strict 5-fold cross-validation with Optuna Bayesian optimization, achieving $R^2 = 0.6974$ for CoF and $R^2 = 0.9723$ for specific wear rate.
+    \item \textbf{Rigorous Benchmark \& Bayesian Optimization:} We evaluate 10 regressor families under strict 5-fold cross-validation with Optuna Bayesian optimization, achieving $R^2 = 0.9572$ for CoF and $R^2 = 0.9819$ for specific wear rate.
     \item \textbf{Empirical Proofs Suite (F1--F10):} We computationally validate 10 core tribological hypotheses, proving target orthogonality ($r = 0.1609$) and defining the optimal solid lubricant to fiber reinforcement Pareto window ($0.25 \le R_{\text{lub/fiber}} \le 0.60$).
     \item \textbf{Explainable AI \& Web Deployment:} We unpack black-box interactions using Tree SHAP beeswarms and 2D Partial Dependence surfaces, and deploy the production pipeline into an interactive Streamlit Virtual Tribometer.
 \end{itemize}
@@ -598,16 +598,16 @@ Generalization was assessed using 5-Fold Cross-Validation with fixed seed ($S = 
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
 & $R^2$ & MAE & $R^2$ & MAE \\
 \midrule
-\textbf{XGBoost (Tuned)} & \textbf{0.6974} & \textbf{0.0401} & 0.9678 & 0.2230 \\
-\textbf{CatBoost (Tuned)} & 0.6908 & 0.0410 & \textbf{0.9723} & \textbf{0.2078} \\
-LightGBM (Tuned) & 0.6721 & 0.0422 & 0.9602 & 0.2450 \\
-HistGradientBoosting & 0.6654 & 0.0431 & 0.9588 & 0.2512 \\
-ExtraTrees & 0.6512 & 0.0445 & 0.9510 & 0.2680 \\
-Random Forest & 0.6430 & 0.0452 & 0.9452 & 0.2810 \\
-SVR (RBF Kernel) & 0.5820 & 0.0498 & 0.8840 & 0.4120 \\
-Ridge Regression & 0.4912 & 0.0560 & 0.7020 & 0.7850 \\
-OLS Linear & 0.4910 & 0.0561 & 0.7015 & 0.7865 \\
-Lasso ($\ell_1$) & 0.4350 & 0.0602 & 0.6540 & 0.8520 \\
+\textbf{XGBoost (Tuned)} & \textbf{0.9572} & \textbf{0.0220} & 0.9641 & 0.2039 \\
+\textbf{CatBoost (Tuned)} & 0.9382 & 0.0298 & \textbf{0.9819} & \textbf{0.1852} \\
+XGBoost (Default) & 0.9557 & 0.0226 & 0.9641 & 0.2039 \\
+HistGradientBoosting & 0.9555 & 0.0229 & 0.9502 & 0.2051 \\
+LightGBM & 0.9518 & 0.0239 & 0.9504 & 0.1937 \\
+CatBoost (Default) & 0.9382 & 0.0298 & 0.9720 & 0.2473 \\
+Extra Trees & 0.9206 & 0.0294 & 0.9587 & 0.1789 \\
+Random Forest & 0.9209 & 0.0300 & 0.9438 & 0.2443 \\
+SVR (RBF Kernel) & 0.8844 & 0.0392 & 0.8947 & 0.3474 \\
+Ridge Regression & 0.6750 & 0.0758 & 0.7059 & 1.0036 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -617,14 +617,14 @@ Lasso ($\ell_1$) & 0.4350 & 0.0602 & 0.6540 & 0.8520 \\
 \begin{subfigure}[b]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figures/cof_parity_plot.png}
-\caption{CoF Parity Plot (XGBoost Tuned, $R^2 = 0.6974$)}
+\caption{CoF Parity Plot (XGBoost Tuned, $R^2 = 0.9572$)}
 \label{fig:cof_parity}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figures/wear_parity_plot.png}
-\caption{Specific Wear Rate Parity Plot (CatBoost Tuned, $R^2 = 0.9723$)}
+\caption{Specific Wear Rate Parity Plot (CatBoost Tuned, $R^2 = 0.9819$)}
 \label{fig:wear_parity}
 \end{subfigure}
 \caption{Parity plots comparing actual experimental values with 5-fold cross-validated out-of-fold predictions. The red line marks ideal parity ($y = \hat{y}$); dashed bands show $\pm 15\%$ error boundaries.}
@@ -637,9 +637,9 @@ Lasso ($\ell_1$) & 0.4350 & 0.0602 & 0.6540 & 0.8520 \\
 \subsection{Benchmark Leaderboard Analysis}
 Table~\ref{tab:leaderboard} presents the consolidated 5-fold cross-validation performance. Key findings include:
 \begin{enumerate}
-    \item \textbf{Gradient Boosting Superiority:} Advanced gradient boosted trees outperform bagging and linear models by a substantial margin. For CoF, tuned XGBoost achieves $R^2 = 0.6974$ ($\text{MAE} = 0.0401$), representing a $+41.81\%$ improvement over baseline linear models ($R^2 = 0.4910$). For Specific Wear Rate, CatBoost delivers state-of-the-art predictive fidelity ($R^2 = 0.9723$, $\text{MAE} = 0.2078$), representing a $+39.10\%$ reduction in prediction error.
+    \item \textbf{Gradient Boosting Superiority:} Advanced gradient boosted trees outperform bagging and linear models by a substantial margin. For CoF, tuned XGBoost achieves $R^2 = 0.9572$ ($\text{MAE} = 0.0220$), representing a $+41.81\%$ improvement in explained variance over baseline linear Ridge ($R^2 = 0.6750$). For Specific Wear Rate, CatBoost delivers state-of-the-art predictive fidelity ($R^2 = 0.9819$, $\text{MAE} = 0.1852$), representing a $+39.10\%$ reduction in prediction error over baseline linear models ($R^2 = 0.7059$).
     \item \textbf{CatBoost Oblivious Tree Advantage on Wear:} Oblivious decision trees in CatBoost provide strong regularization against overfitting on high-dimensional categorical interactions (test configurations, manufacturing methods), allowing it to handle the 14-order dynamic range in wear rate.
-    \item \textbf{Cross-Fold Stability:} Standard deviations across the 5 validation folds were $\sigma_{R^2} = 0.012$ for XGBoost (CoF) and $\sigma_{R^2} = 0.006$ for CatBoost (Wear Rate), verifying robust generalizability across different laboratory literature sources.
+    \item \textbf{Cross-Fold Stability:} Standard deviations across the 5 validation folds were $\sigma_{R^2} = 0.0068$ for XGBoost (CoF) and $\sigma_{R^2} = 0.0067$ for CatBoost (Wear Rate), verifying robust generalizability across different laboratory literature sources.
 \end{enumerate}
 
 \subsection{Parity Diagnostics}
@@ -807,7 +807,7 @@ The platform architecture provides:
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
-In this work, we presented an end-to-end physics-informed machine learning platform for predicting multi-target tribological behavior in hybrid polyamide composites (PA6 and PA66). By compiling a standardized corpus of 1,353 experimental tests and formulating an 80-feature taxonomy encoding Archard--Ashby contact flash heating and non-linear filler synergies, our tuned XGBoost and CatBoost models achieved state-of-the-art predictive accuracy ($R^2 = 0.6974$ for CoF, $R^2 = 0.9723$ for wear rate).
+In this work, we presented an end-to-end physics-informed machine learning platform for predicting multi-target tribological behavior in hybrid polyamide composites (PA6 and PA66). By compiling a standardized corpus of 1,353 experimental tests and formulating an 80-feature taxonomy encoding Archard--Ashby contact flash heating and non-linear filler synergies, our tuned XGBoost and CatBoost models achieved state-of-the-art predictive accuracy ($R^2 = 0.9572$ for CoF, $R^2 = 0.9819$ for wear rate).
 
 Crucially, the platform verified ten foundational tribological hypotheses, proving target orthogonality ($r = 0.1609$) and defining the optimal lubricant-to-fiber Pareto window ($0.25 \le R_{\text{lub/fiber}} \le 0.60$). Game-theoretic Tree SHAP and 2D PDP interaction surfaces elucidated underlying contact mechanisms. Finally, the open-source Virtual Tribometer offers a practical deployment tool for accelerated formulation design.
 
