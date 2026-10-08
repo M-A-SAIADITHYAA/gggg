@@ -277,28 +277,178 @@ def create_report():
     # 2. BONAFIDE CERTIFICATE
     # -------------------------------------------------------------
     doc.add_page_break()
+
+    bonafide_logo_path = "extracted_logos/word/media/image2.jpeg"
+    if os.path.exists(bonafide_logo_path):
+        p_blog = doc.add_paragraph()
+        p_blog.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_blog.paragraph_format.space_before = Pt(0)
+        p_blog.paragraph_format.space_after = Pt(20)
+        p_blog.add_run().add_picture(bonafide_logo_path, width=Inches(3.8))
+
     p_cert_title = doc.add_paragraph()
     p_cert_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_cert_title.paragraph_format.space_before = Pt(18)
-    p_cert_title.paragraph_format.space_after = Pt(18)
+    p_cert_title.paragraph_format.space_before = Pt(0)
+    p_cert_title.paragraph_format.space_after = Pt(24)
     r = p_cert_title.add_run("BONAFIDE CERTIFICATE")
+    r.font.name = 'Times New Roman'
     r.font.size = Pt(16)
     r.font.bold = True
 
-    add_body_p('This is to certify that this project report entitled "PHYSICS-INFORMED MACHINE LEARNING FRAMEWORK FOR MULTI-FILLER POLYAMIDE (PA6 / PA66) COMPOSITE TRIBOLOGY: MODELING, EMPIRICAL VALIDATION, AND INTERACTIVE VIRTUAL TRIBOMETER" is the bonafide work of "Mr. HARI SREERAM R (Reg. No. CH.SC.U4CSE23019)" and "Mr. M A SAI ADITHYAA (Reg. No. CH.SC.U4CSE23029)" who carried out the research project work under our supervision in partial fulfilment for the award of the degree of Bachelor of Technology in Computer Science and Engineering at Amrita School of Computing, Amrita Vishwa Vidyapeetham, Chennai.')
+    p_cert_body = doc.add_paragraph()
+    p_cert_body.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    p_cert_body.paragraph_format.space_before = Pt(0)
+    p_cert_body.paragraph_format.space_after = Pt(36)
+    p_cert_body.paragraph_format.line_spacing = 1.25
 
-    p_sig = doc.add_paragraph()
-    p_sig.paragraph_format.space_before = Pt(36)
-    p_sig.paragraph_format.line_spacing = 1.15
-    r = p_sig.add_run("SIGNATURE                                                                SIGNATURE\n\n\n\nDr. S. BHAGAVATHI PRIYA                                     Dr. SHUBRAJIT BHAUMIK\nCHAIRPERSON                                                          SUPERVISOR\nAssociate Professor, Dept. of CSE                         Associate Professor, Dept. of Mechanical Eng.\nAmrita School of Computing                                    Amrita School of Engineering\nChennai.                                                                    Chennai.\n\n\n\nSIGNATURE                                                                SIGNATURE\n\n\n\nDr. SANGAPU SREENIVASA CHAKRAVARTHI   Dr. J. UMAMAGESWARAN\nCO-SUPERVISOR                                                       PROJECT COORDINATOR\nAssistant Professor (Sr. Gr.), Dept. of CSE            Associate Professor, Dept. of CSE\nAmrita School of Computing                                    Amrita School of Computing\nChennai.                                                                    Chennai.")
-    r.font.size = Pt(11.5)
-    r.font.bold = True
+    r1 = p_cert_body.add_run("This is to certify that this project report entitled ")
+    r1.font.name = 'Times New Roman'
+    r1.font.size = Pt(12)
 
-    p_exam = doc.add_paragraph()
-    p_exam.paragraph_format.space_before = Pt(30)
-    r = p_exam.add_run("INTERNAL EXAMINER                                                EXTERNAL EXAMINER")
-    r.font.size = Pt(12)
-    r.font.bold = True
+    r2 = p_cert_body.add_run("“PHYSICS-INFORMED MACHINE LEARNING FRAMEWORK FOR MULTI-FILLER POLYAMIDE (PA6 / PA66) COMPOSITE TRIBOLOGY: MODELING, EMPIRICAL VALIDATION, AND INTERACTIVE VIRTUAL TRIBOMETER”")
+    r2.font.name = 'Times New Roman'
+    r2.font.size = Pt(12)
+    r2.font.bold = True
+
+    r3 = p_cert_body.add_run(" is the bonafide work of ")
+    r3.font.name = 'Times New Roman'
+    r3.font.size = Pt(12)
+
+    r4 = p_cert_body.add_run("“HARI SREERAM R (CH.SC.U4CSE23019)”")
+    r4.font.name = 'Times New Roman'
+    r4.font.size = Pt(12)
+    r4.font.bold = True
+
+    r5 = p_cert_body.add_run(" and ")
+    r5.font.name = 'Times New Roman'
+    r5.font.size = Pt(12)
+
+    r6 = p_cert_body.add_run("“M A SAI ADITHYAA (CH.SC.U4CSE23029)”")
+    r6.font.name = 'Times New Roman'
+    r6.font.size = Pt(12)
+    r6.font.bold = True
+
+    r7 = p_cert_body.add_run(" who carried out the project work under my supervision.")
+    r7.font.name = 'Times New Roman'
+    r7.font.size = Pt(12)
+
+    tbl_sig = doc.add_table(rows=1, cols=2)
+    tblPr = tbl_sig._tbl.tblPr
+    tblBorders = parse_xml(r'''
+        <w:tblBorders %s>
+            <w:top w:val="none"/>
+            <w:left w:val="none"/>
+            <w:bottom w:val="none"/>
+            <w:right w:val="none"/>
+            <w:insideH w:val="none"/>
+            <w:insideV w:val="none"/>
+        </w:tblBorders>
+    ''' % nsdecls("w"))
+    tblPr.append(tblBorders)
+
+    tblCellMar = parse_xml(r'''
+        <w:tblCellMar %s>
+            <w:top w:w="0" w:type="dxa"/>
+            <w:left w:w="0" w:type="dxa"/>
+            <w:bottom w:w="0" w:type="dxa"/>
+            <w:right w:w="0" w:type="dxa"/>
+        </w:tblCellMar>
+    ''' % nsdecls("w"))
+    tblPr.append(tblCellMar)
+
+    col_widths = [Inches(3.8), Inches(2.7)]
+    for row in tbl_sig.rows:
+        for i, w in enumerate(col_widths):
+            row.cells[i].width = w
+
+    # Cell 0: Chairperson
+    c0 = tbl_sig.rows[0].cells[0]
+    p0 = c0.paragraphs[0]
+    p0.paragraph_format.space_before = Pt(0)
+    p0.paragraph_format.space_after = Pt(36)
+    p0.paragraph_format.line_spacing = 1.15
+    r_sig0 = p0.add_run("SIGNATURE")
+    r_sig0.font.name = 'Times New Roman'
+    r_sig0.font.size = Pt(12)
+    r_sig0.font.bold = True
+
+    p0_info = c0.add_paragraph()
+    p0_info.paragraph_format.space_before = Pt(0)
+    p0_info.paragraph_format.space_after = Pt(0)
+    p0_info.paragraph_format.line_spacing = 1.15
+    r_info0 = p0_info.add_run("Dr. S. Bhagavathi Priya\nCHAIRPERSON\nDepartment of CSE\nAmrita School of Computing\nChennai.")
+    r_info0.font.name = 'Times New Roman'
+    r_info0.font.size = Pt(12)
+    r_info0.font.bold = True
+
+    # Cell 1: Supervisor
+    c1 = tbl_sig.rows[0].cells[1]
+    p1 = c1.paragraphs[0]
+    p1.paragraph_format.space_before = Pt(0)
+    p1.paragraph_format.space_after = Pt(36)
+    p1.paragraph_format.line_spacing = 1.15
+    r_sig1 = p1.add_run("SIGNATURE")
+    r_sig1.font.name = 'Times New Roman'
+    r_sig1.font.size = Pt(12)
+    r_sig1.font.bold = True
+
+    p1_info = c1.add_paragraph()
+    p1_info.paragraph_format.space_before = Pt(0)
+    p1_info.paragraph_format.space_after = Pt(0)
+    p1_info.paragraph_format.line_spacing = 1.15
+    r_info1 = p1_info.add_run("Dr. Sangapu Sreenivasa Chakravarthi\nSUPERVISOR\nDepartment of CSE\nAmrita School of Computing\nChennai.")
+    r_info1.font.name = 'Times New Roman'
+    r_info1.font.size = Pt(12)
+    r_info1.font.bold = True
+
+    p_spacer = doc.add_paragraph()
+    p_spacer.paragraph_format.space_before = Pt(48)
+    p_spacer.paragraph_format.space_after = Pt(0)
+
+    tbl_exam = doc.add_table(rows=1, cols=2)
+    tblPr2 = tbl_exam._tbl.tblPr
+    tblBorders2 = parse_xml(r'''
+        <w:tblBorders %s>
+            <w:top w:val="none"/>
+            <w:left w:val="none"/>
+            <w:bottom w:val="none"/>
+            <w:right w:val="none"/>
+            <w:insideH w:val="none"/>
+            <w:insideV w:val="none"/>
+        </w:tblBorders>
+    ''' % nsdecls("w"))
+    tblPr2.append(tblBorders2)
+    tblCellMar2 = parse_xml(r'''
+        <w:tblCellMar %s>
+            <w:top w:w="0" w:type="dxa"/>
+            <w:left w:w="0" w:type="dxa"/>
+            <w:bottom w:w="0" w:type="dxa"/>
+            <w:right w:w="0" w:type="dxa"/>
+        </w:tblCellMar>
+    ''' % nsdecls("w"))
+    tblPr2.append(tblCellMar2)
+
+    for row in tbl_exam.rows:
+        for i, w in enumerate(col_widths):
+            row.cells[i].width = w
+
+    c0_ex = tbl_exam.rows[0].cells[0]
+    p0_ex = c0_ex.paragraphs[0]
+    p0_ex.paragraph_format.space_before = Pt(0)
+    p0_ex.paragraph_format.space_after = Pt(0)
+    r_ex0 = p0_ex.add_run("INTERNAL EXAMINER")
+    r_ex0.font.name = 'Times New Roman'
+    r_ex0.font.size = Pt(12)
+    r_ex0.font.bold = True
+
+    c1_ex = tbl_exam.rows[0].cells[1]
+    p1_ex = c1_ex.paragraphs[0]
+    p1_ex.paragraph_format.space_before = Pt(0)
+    p1_ex.paragraph_format.space_after = Pt(0)
+    r_ex1 = p1_ex.add_run("EXTERNAL EXAMINER")
+    r_ex1.font.name = 'Times New Roman'
+    r_ex1.font.size = Pt(12)
+    r_ex1.font.bold = True
 
     # -------------------------------------------------------------
     # 3. DECLARATION BY THE CANDIDATES
